@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\DisableButton;
 use App\Models\Room;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -26,15 +27,32 @@ class RoomController extends AdminController
     {
         $grid = new Grid(new Room());
 
-        $grid->column('area', '所属区域');
-        $grid->column('title', '房间号');
-        $grid->column('building', '楼号');
+        $grid->column('area', '所属区域')->filter();
+        $grid->column('building', '楼号')->filter();
         $grid->column('unit', '单元');
+        $grid->column('title', '房间号');
         $grid->column('default_number', '默认居住人数');
         $grid->column('default_deposit', '默认押金');
         $grid->column('default_rent', '默认租金');
         $grid->column('remark', '备注');
-        $grid->column('is_using', __('Is using'));
+        $grid->column('is_using', '状态')->display(function ($using) {
+            return $using
+                ? '<span class="label label-success">正常</span>'
+                : '<span class="label label-danger">已禁用</span>';
+        });
+
+        $grid->quickSearch('title');
+
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
+            $filter->equal('title', '房间号');
+        });
+
+        $grid->actions(function ($actions) {
+            $actions->add(new DisableButton);
+            $actions->disableDelete();
+            $actions->disableView();
+        });
 
         return $grid;
     }

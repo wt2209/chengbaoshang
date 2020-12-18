@@ -1,5 +1,4 @@
 <?php
-use Encore\Admin\Form;
 /**
  * Laravel-admin - admin builder based on Laravel.
  * @author z-song <https://github.com/z-song>
@@ -17,9 +16,26 @@ use Encore\Admin\Form;
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
+use Encore\Admin\Form;
+use Encore\Admin\Grid;
+
+Grid::init(function (Grid $grid) {
+    // $grid->disableActions();
+    // $grid->disablePagination();
+    // $grid->disableCreateButton();
+    // $grid->disableFilter();
+    // $grid->disableRowSelector();
+    $grid->disableColumnSelector();
+    // $grid->disableTools();
+    // $grid->disableExport();
+    $grid->actions(function (Grid\Displayers\Actions $actions) {
+        $actions->disableView();
+        // $actions->disableEdit();
+        $actions->disableDelete();
+    });
+});
 
 Form::forget(['map', 'editor']);
-
 Form::init(function (Form $form) {
     $form->disableEditingCheck();
     $form->disableCreatingCheck();
@@ -27,6 +43,5 @@ Form::init(function (Form $form) {
     $form->tools(function (Form\Tools $tools) {
         $tools->disableDelete();
         $tools->disableView();
-        $tools->disableList();
     });
 });
