@@ -2,11 +2,11 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\DisableButton;
 use App\Models\Category;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
-use Encore\Admin\Show;
 
 class CategoryController extends AdminController
 {
@@ -15,7 +15,7 @@ class CategoryController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Category';
+    protected $title = '所属类型';
 
     /**
      * Make a grid builder.
@@ -26,36 +26,29 @@ class CategoryController extends AdminController
     {
         $grid = new Grid(new Category());
 
-        $grid->column('id', __('Id'));
-        $grid->column('title', __('Title'));
-        $grid->column('has_rent', __('Has rent'));
-        $grid->column('remark', __('Remark'));
-        $grid->column('is_using', __('Is using'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('title', '名称');
+        $grid->column('has_lease', '存在租期')->display(function ($hasRent) {
+            return $hasRent ? '有租期' : '无';
+        });
+        $grid->column('remark', '备注');
+        $grid->column('is_using', '状态')->display(function ($using) {
+            return $using
+                ? '<span class="label label-success">正常</span>'
+                : '<span class="label label-danger">已禁用</span>';
+        });
+        $grid->column('created_at', '创建时间');
+
+        $grid->disableFilter();
+
+        $grid->disableRowSelector();
+
+        $grid->actions(function ($actions) {
+            $actions->add(new DisableButton);
+            $actions->disableDelete();
+            $actions->disableView();
+        });
 
         return $grid;
-    }
-
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        $show = new Show(Category::findOrFail($id));
-
-        $show->field('id', __('Id'));
-        $show->field('title', __('Title'));
-        $show->field('has_rent', __('Has rent'));
-        $show->field('remark', __('Remark'));
-        $show->field('is_using', __('Is using'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
-
-        return $show;
     }
 
     /**
@@ -65,12 +58,24 @@ class CategoryController extends AdminController
      */
     protected function form()
     {
+        $states = [
+            'on'  => ['value' => 1, 'text' => '存在', 'color' => 'danger'],
+            'off' => ['value' => 0, 'text' => '不存在'],
+        ];
+
         $form = new Form(new Category());
 
-        $form->text('title', __('Title'));
-        $form->switch('has_rent', __('Has rent'));
-        $form->text('remark', __('Remark'));
-        $form->switch('is_using', __('Is using'))->default(1);
+        $form->text('title', '名称')
+            ->creationRules(['required', 'unique:categories'], [
+                'required' => '必须填写',
+                'unique' => '此名称已存在',
+            ])
+            ->updateRules(['required', 'unique:categories,title,{{id}}'], [
+                'required' => '必须填写',
+                'unique' => '此名称已存在',
+            ]);
+        $form->switch('has_lease', '是否存在租期')->states($states);
+        $form->textarea('remark', '备注');
 
         return $form;
     }

@@ -54,33 +54,9 @@ class RoomController extends AdminController
             $actions->disableView();
         });
 
+        $grid->disableRowSelector();
+
         return $grid;
-    }
-
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        $show = new Show(Room::findOrFail($id));
-
-        $show->field('id', __('Id'));
-        $show->field('area', __('Area'));
-        $show->field('title', __('Title'));
-        $show->field('building', __('Building'));
-        $show->field('unit', __('Unit'));
-        $show->field('default_number', __('Default number'));
-        $show->field('default_deposit', __('Default deposit'));
-        $show->field('default_rent', __('Default rent'));
-        $show->field('remark', __('Remark'));
-        $show->field('is_using', __('Is using'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
-
-        return $show;
     }
 
     /**

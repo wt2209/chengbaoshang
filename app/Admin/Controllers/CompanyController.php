@@ -2,11 +2,12 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\RenameButton;
+use App\Models\Category;
 use App\Models\Company;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
-use Encore\Admin\Show;
 
 class CompanyController extends AdminController
 {
@@ -15,7 +16,7 @@ class CompanyController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Company';
+    protected $title = '公司明细';
 
     /**
      * Make a grid builder.
@@ -24,44 +25,40 @@ class CompanyController extends AdminController
      */
     protected function grid()
     {
+        $categoryMapper = Category::pluck('title', 'id')->toArray();
         $grid = new Grid(new Company());
 
-        $grid->column('id', __('Id'));
-        $grid->column('category_id', __('Category id'));
-        $grid->column('company_name', __('Company name'));
-        $grid->column('manager', __('Manager'));
-        $grid->column('manager_phone', __('Manager phone'));
-        $grid->column('linkman', __('Linkman'));
-        $grid->column('linkman_phone', __('Linkman phone'));
-        $grid->column('remark', __('Remark'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('category_id', '所属类型')->display(function ($categoryId) use ($categoryMapper) {
+            return $categoryMapper[$categoryId];
+        })->filter($categoryMapper);
+        $grid->column('company_name', '公司名称');
+        $grid->column('manager', '负责人');
+        $grid->column('manager_phone', '负责人电话');
+        $grid->column('linkman', '日常联系人');
+        $grid->column('linkman_phone', '联系人电话');
+        $grid->column('remark', '备注');
+        $grid->column('created_at', '最早入住公寓时间');
+
+        $grid->quickSearch(function ($model, $query) {
+            if (intval($query) > 0) { // 输入的是电话
+                $model->where('manager_phone', 'like', "%{$query}%")
+                    ->orWhere('linkman_phone', 'like', "%{$query}%");
+            } else { // 输入的是公司名或人名
+                $model->where('company_name', 'like', "%{$query}%")
+                    ->orWhere('manager', 'like', "%{$query}%")
+                    ->orWhere('linkman', 'like', "%{$query}%");
+            }
+        })->placeholder('公司名、人名或电话');
+
+        $grid->disableRowSelector();
+        $grid->disableFilter();
+        $grid->actions(function ($actions) {
+            $actions->add(new RenameButton);
+            $actions->disableDelete();
+            $actions->disableView();
+        });
 
         return $grid;
-    }
-
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        $show = new Show(Company::findOrFail($id));
-
-        $show->field('id', __('Id'));
-        $show->field('category_id', __('Category id'));
-        $show->field('company_name', __('Company name'));
-        $show->field('manager', __('Manager'));
-        $show->field('manager_phone', __('Manager phone'));
-        $show->field('linkman', __('Linkman'));
-        $show->field('linkman_phone', __('Linkman phone'));
-        $show->field('remark', __('Remark'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
-
-        return $show;
     }
 
     /**
@@ -73,13 +70,25 @@ class CompanyController extends AdminController
     {
         $form = new Form(new Company());
 
-        $form->switch('category_id', __('Category id'));
-        $form->text('company_name', __('Company name'));
-        $form->text('manager', __('Manager'));
-        $form->text('manager_phone', __('Manager phone'));
-        $form->text('linkman', __('Linkman'));
-        $form->text('linkman_phone', __('Linkman phone'));
-        $form->text('remark', __('Remark'));
+        $form->select('category_id', '所属类型')
+            ->options(Category::pluck('title', 'id'))
+            ->rules('required', [
+                'required' => '必须选择',
+            ]);
+        $form->text('company_name', '公司名称')
+            ->creationRules(['required', 'unique:companies'], [
+                'required' => '必须填写',
+                'unique' => '此公司已存在',
+            ])
+            ->updateRules(['required', 'unique:companies,company_name,{{id}}'], [
+                'required' => '必须填写',
+                'unique' => '此公司已存在',
+            ]);
+        $form->text('manager', '负责人');
+        $form->text('manager_phone', '负责人电话');
+        $form->text('linkman', '日常联系人');
+        $form->text('linkman_phone', '联系人电话');
+        $form->textarea('remark', '备注');
 
         return $form;
     }

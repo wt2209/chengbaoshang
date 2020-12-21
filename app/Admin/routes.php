@@ -16,4 +16,8 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
     $router->resource('categories', CategoryController::class);
     $router->resource('rooms', RoomController::class);
+    $router->resource('companies', CompanyController::class);
+    $router->resource('renames', RenameController::class);
+    $router->resource('records', RecordController::class);
+    $router->resource('deposits', DepositController::class);
 });

@@ -27,10 +27,10 @@ class CreateRecordsTable extends Migration
             $table->boolean('has_lease')->default(false)->comment('是否存在租期');
             $table->date('lease_start')->nullable()->comment('租期开始日期');
             $table->date('lease_end')->nullable()->comment('租期结束日期');
-            $table->integer('electric_start_base')->nullable();
-            $table->integer('electric_end_base')->nullable();
-            $table->integer('water_start_base')->nullable();
-            $table->integer('water_end_base')->nullable();
+            $table->integer('electric_start_base')->default(0);
+            $table->integer('electric_end_base')->default(0);
+            $table->integer('water_start_base')->default(0);
+            $table->integer('water_end_base')->default(0);
             $table->timestamps();
         });
     }

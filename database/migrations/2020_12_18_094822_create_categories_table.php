@@ -16,7 +16,7 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->tinyIncrements('id');
             $table->string('title', 30)->unique();
-            $table->boolean('has_rent')->default(false)->comment('是否有租期');
+            $table->boolean('has_lease')->default(false)->comment('是否有租期');
             $table->string('remark')->nullable();
             $table->boolean('is_using')->default(true)->comment('是否启用');
             $table->timestamps();

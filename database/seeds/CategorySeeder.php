@@ -8,19 +8,19 @@ class CategorySeeder extends Seeder
     private $categories = [
         [
             'title' => '修船',
-            'has_rent' => false,
+            'has_lease' => false,
         ],
         [
             'title' => '造船',
-            'has_rent' => false,
+            'has_lease' => false,
         ],
         [
             'title' => '青武包商公司',
-            'has_rent' => false,
+            'has_lease' => false,
         ],
         [
             'title' => '外部单位',
-            'has_rent' => true,
+            'has_lease' => true,
         ],
     ];
     /**
