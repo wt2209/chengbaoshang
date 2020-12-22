@@ -53,13 +53,33 @@ class DepositController extends AdminController
         $grid->disableRowSelector();
         $grid->disableCreateButton();
 
-        $grid->quickSearch(function ($model, $query) {
-            $companyIds = Company::where('company_name', 'like', "%{$query}%")->pluck('id')->toArray();
-            $recordIds = Record::whereIn('company_id', $companyIds)->pluck('id');
-            $model->whereIn('record_id', $recordIds)
-                ->orWhere('company_name', 'like', "%{$query}%")
-                ->orWhere('refund_company_name', 'like', "%{$query}%");
-        })->placeholder('公司名');
+        $grid->expandFilter();
+
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
+            $filter->where(function ($query) {
+                $companyIds = Company::where('company_name', 'like', "%{$this->input}%")->pluck('id')->toArray();
+                $recordIds = Record::whereIn('company_id', $companyIds)->pluck('id');
+                $query->whereIn('record_id', $recordIds)
+                    ->orWhere('company_name', 'like', "%{$this->input}%")
+                    ->orWhere('refund_company_name', 'like', "%{$this->input}%");
+            }, '公司名');
+            $filter->where(function ($query) {
+                if ($this->input === 'uncharged') {
+                    $query->whereNull('charged_at');
+                }
+                if ($this->input === 'charged') {
+                    $query->whereNotNull('charged_at')->whereNull('refunded_at');
+                }
+                if ($this->input === 'refunded') {
+                    $query->whereNotNull('refunded_at');
+                }
+            }, '状态')->radio([
+                'uncharged' => '未缴费&nbsp;&nbsp;&nbsp;',
+                'charged' => '已缴费&nbsp;&nbsp;&nbsp;',
+                'refunded' => '已退费&nbsp;&nbsp;&nbsp;',
+            ]);
+        });
 
         return $grid;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\QuitButton;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Record;
@@ -57,6 +58,40 @@ class RecordController extends AdminController
                 : '<span class="label label-danger">已退房</span>';
         });
         $grid->column('quit_at', '退房时间');
+
+        $grid->expandFilter();
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
+            $filter->where(function ($query) {
+                if (strpos($this->input, '-') !== false) { // 输入的是楼号、房间号
+                    $query->whereHas('room', function ($q) {
+                        $q->where('title', 'like', "{$this->input}%");
+                    });
+                } else { // 输入的是公司名
+                    $query->whereHas('company', function ($q) {
+                        $q->where('company_name', 'like', "%{$this->input}%");
+                    })
+                        ->orWhere('company_name', 'like', "%{$this->input}%");
+                }
+            }, '公司名/房间号');
+            $filter->where(function ($query) {
+                if ($this->input === 'living') {
+                    $query->where('is_living', true);
+                }
+                if ($this->input === 'quitted') {
+                    $query->where('is_living', false);
+                }
+            }, '状态')->radio([
+                'living' => '在住&nbsp;&nbsp;&nbsp;',
+                'quitted' => '已退房&nbsp;&nbsp;&nbsp;',
+            ]);
+        });
+
+        $grid->disableRowSelector();
+        $grid->actions(function ($actions) {
+            $actions->add(new QuitButton);
+            $actions->disableView();
+        });
 
         return $grid;
     }
@@ -123,6 +158,9 @@ class RecordController extends AdminController
 
         $form->number('electric_start_base', '入住时电表底数');
         $form->number('water_start_base', '入住时水表底数');
+        $form->date('quit_at', '退房时间');
+        $form->number('electric_end_base', '入住时电表底数');
+        $form->number('water_end_base', '入住时水表底数');
 
         return $form;
     }

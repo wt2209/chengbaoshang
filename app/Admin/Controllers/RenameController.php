@@ -37,8 +37,9 @@ class RenameController extends AdminController
         $grid->disableActions();
         $grid->disableFilter();
         $grid->quickSearch(function ($model, $query) {
-            $companyIds = Company::where('company_name', 'like', "%{$query}%")->pluck('id')->toArray();
-            $model->whereIn('company_id', $companyIds)
+            $model->whereHas('company', function ($q) use($query) {
+                $q->where('company_name', 'like', "%{$query}%");
+            })
             ->orWhere('new_name', 'like', "%{$query}%")
             ->orWhere('old_name', 'like', "%{$query}%");
         })->placeholder('公司名');
