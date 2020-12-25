@@ -57,7 +57,7 @@ class RecordController extends AdminController
                 ?  '<span class="label label-success">在住</span>'
                 : '<span class="label label-danger">已退房</span>';
         });
-        $grid->column('quit_at', '退房时间');
+        $grid->column('quitted_at', '退房时间');
 
         $grid->expandFilter();
         $grid->filter(function ($filter) {
@@ -144,6 +144,7 @@ class RecordController extends AdminController
             ]);
         $form->radio('gender', '性别')
             ->options(['男' => '男&nbsp;&nbsp;&nbsp;', '女' => '女'])
+            ->default('男')
             ->rules('required', [
                 'required' => '必须选择',
             ]);
@@ -158,7 +159,7 @@ class RecordController extends AdminController
 
         $form->number('electric_start_base', '入住时电表底数');
         $form->number('water_start_base', '入住时水表底数');
-        $form->date('quit_at', '退房时间');
+        $form->date('quitted_at', '退房时间');
         $form->number('electric_end_base', '入住时电表底数');
         $form->number('water_end_base', '入住时水表底数');
 

@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Deposit;
 use App\Models\Record;
 use App\Models\Rent;
+use App\Models\Report;
 use Carbon\Carbon;
 
 class RecordObserver
@@ -38,7 +39,7 @@ class RecordObserver
             $diff = $start->diff($end);
             $monthCount = ($diff->y) * 12 + $diff->m;
             $dayCount = $diff->d;
-            $endMonthDays = (int)date('t', $record->lease_end);
+            $endMonthDays = (int)date('t', strtotime($record->lease_end));
             $rentPerMonth = $record->rent;
             $money = round($rentPerMonth * ($monthCount + min(1, $dayCount / $endMonthDays)), 2);
 
@@ -65,6 +66,18 @@ class RecordObserver
         // 删除记录时，自动删除对应的押金记录
         $deposit = Deposit::where('record_id', $record->id)->first();
         $deposit->delete();
+
+        // 删除预交费记录
+        $rent = Rent::where('record_id', $record->id)->first();
+        if ($rent) {
+            $rent->delete();
+        }
+
+        // 删除月度报表中的记录
+        $report = Report::where('record_id', $record->id)->first();
+        if ($report) {
+            $report->delete();
+        }
     }
 
     public function restored(Record $record)

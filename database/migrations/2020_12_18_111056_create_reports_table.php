@@ -35,6 +35,7 @@ class CreateReportsTable extends Migration
             $table->decimal('rent', 10, 2)->default(0)->comment('本期租金');
             $table->decimal('rent_discount', 4, 2)->default(0)->comment('本期减免比例');
             $table->decimal('actual_rent', 10, 2)->default(0)->comment('本期实际租金');
+            $table->date('discounted_at')->nullable()->comment('上传折扣时间');
             $table->date('charged_at')->nullable()->comment('交费/扣款时间');
             $table->timestamps();
         });

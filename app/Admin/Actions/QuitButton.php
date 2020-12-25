@@ -14,13 +14,13 @@ class QuitButton extends RowAction
     {
         $this->text('electric_end_base', '退房时电表数')->rules('integer|nullable', ['integer'=>'请正确填写']);
         $this->text('water_end_base', '退房时水表数')->rules('integer|nullable', ['integer'=>'请正确填写']);
-        $this->date('quit_at', '退房时间')->default(now())->rules('required', ['required'=>'必须填写']);
+        $this->date('quitted_at', '退房时间')->default(now())->rules('required', ['required'=>'必须填写']);
     }
 
     public function handle(Model $model, Request $request)
     {
         $model->is_living = false;
-        $model->quit_at = $request->quit_at;
+        $model->quitted_at = $request->quitted_at;
         $model->electric_end_base = $request->electric_end_base;
         $model->water_end_base = $request->water_end_base;
         $model->save();

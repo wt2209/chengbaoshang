@@ -32,4 +32,10 @@ Route::group([
 
     $router->resource('deposits', DepositController::class)
         ->only(['index', 'create', 'store', 'update', 'edit']);
+
+    $router->resource('rents', RentController::class)
+        ->only(['index', 'create', 'store', 'update', 'edit', 'delete']);
+
+    $router->resource('reports', ReportController::class)
+        ->only(['index', 'edit', 'update', 'delete']);
 });

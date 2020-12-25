@@ -2,6 +2,10 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\BatchCharge;
+use App\Admin\Actions\BatchDepositRefund;
+use App\Admin\Actions\ChargeButton;
+use App\Admin\Actions\DepositRefundButton;
 use App\Models\Company;
 use App\Models\Deposit;
 use App\Models\Record;
@@ -36,6 +40,7 @@ class DepositController extends AdminController
         });
         $grid->column('company_name', '开单时公司名称');
         $grid->column('billed_at', '开具时间');
+        $grid->column('money', '押金金额')->totalRow();
         $grid->column('status', '状态')->display(function () {
             if ($this->refunded_at) {
                 return '<span class="label label-danger">已退费</span>';
@@ -45,12 +50,10 @@ class DepositController extends AdminController
                 return '<span class="label label-warning">未缴费</span>';
             }
         });
-        $grid->column('money', '押金金额')->totalRow();
         $grid->column('charged_at', '缴费时间');
         $grid->column('refund_company_name', '退费时公司名称');
         $grid->column('refunded_at', '退费时间');
 
-        $grid->disableRowSelector();
         $grid->disableCreateButton();
 
         $grid->expandFilter();
@@ -81,6 +84,23 @@ class DepositController extends AdminController
             ]);
         });
 
+        $grid->actions(function($actions){
+            $actions->disableEdit();
+            $actions->disableDelete();
+            $actions->disableView();
+            $row = $actions->row;
+            if (!$row->charged_at) {
+                $actions->add(new ChargeButton);
+            }
+            if ($row->charged_at && !$row->refunded_at) {
+                $actions->add(new DepositRefundButton);
+            }
+        });
+        $grid->batchActions(function ($batch) {
+            $batch->disableDelete();
+            $batch->add(new BatchCharge());
+            $batch->add(new BatchDepositRefund());
+        });
         return $grid;
     }
 

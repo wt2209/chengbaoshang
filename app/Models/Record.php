@@ -9,7 +9,7 @@ class Record extends Model
     protected $fillable = [
         'category_id', 'room_id', 'company_id', 'gender', 
         'company_name', 'rent', 'is_living', 'entered_at', 
-        'quit_at', 'has_lease', 'lease_start', 'lease_end',
+        'quitted_at', 'has_lease', 'lease_start', 'lease_end',
          'electric_start_base', 'electric_end_base', 
          'water_start_base', 'water_end_base'
     ];
