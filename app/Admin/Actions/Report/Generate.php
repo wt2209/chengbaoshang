@@ -86,13 +86,13 @@ class Generate extends Action
                 $report['current_electric_base'] = $record->electric_end_base ?? 0;
                 $report['current_water_base'] = $record->water_end_base ?? 0;
             }
-          
+
             $report['electric_price'] = $electricPrice;
-            $report['electric_amount'] = $electricPrice * ($report['current_electric_base'] - $report['pre_electric_base']);
+            $report['electric_amount'] = $report['current_electric_base'] - $report['pre_electric_base'];
             $report['electric_amount'] = max(0, $report['electric_amount']);
             $report['electric_money'] = round($report['electric_price'] * $report['electric_amount'], 2);
             $report['water_price'] = $waterPrice;
-            $report['water_amount'] = $waterPrice * ($report['current_water_base'] - $report['pre_water_base']);
+            $report['water_amount'] = $report['current_water_base'] - $report['pre_water_base'];
             $report['water_amount'] = max(0, $report['water_amount']);
             $report['water_money'] = round($report['water_price'] * $report['water_amount'], 2);
             $report['created_at'] = $report['updated_at'] = now();

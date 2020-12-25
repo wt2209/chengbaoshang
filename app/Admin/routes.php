@@ -38,4 +38,7 @@ Route::group([
 
     $router->resource('reports', ReportController::class)
         ->only(['index', 'edit', 'update', 'delete']);
+
+    $router->resource('utility-bases', UtilityBaseController::class)
+        ->only(['index', 'create', 'store', 'update', 'edit', 'delete']);
 });

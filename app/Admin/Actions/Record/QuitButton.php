@@ -12,9 +12,9 @@ class QuitButton extends RowAction
 
     public function form()
     {
-        $this->text('electric_end_base', '退房时电表数')->rules('integer|nullable', ['integer' => '请正确填写']);
-        $this->text('water_end_base', '退房时水表数')->rules('integer|nullable', ['integer' => '请正确填写']);
-        $this->date('quitted_at', '退房时间')->default(now())->rules('required', ['required' => '必须填写']);
+        $this->text('electric_end_base', '退房时电表数')->rules('required');
+        $this->text('water_end_base', '退房时水表数')->rules('required');
+        $this->date('quitted_at', '退房时间')->default(now())->rules('required');
     }
 
     public function handle(Model $model, Request $request)
