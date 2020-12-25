@@ -5,13 +5,13 @@ namespace App\Admin\Actions;
 use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
 
-class DisableButton extends RowAction
+class EnableButton extends RowAction
 {
-    public $name = '禁用';
+    public $name = '启用';
 
     public function handle(Model $model)
     {
-        $model->is_using = false;
+        $model->is_using = true;
         $model->save();
         return $this->response()->success('操作成功')->refresh();
     }

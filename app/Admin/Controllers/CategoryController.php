@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\DisableButton;
+use App\Admin\Actions\EnableButton;
 use App\Models\Category;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -43,7 +44,12 @@ class CategoryController extends AdminController
         $grid->disableRowSelector();
 
         $grid->actions(function ($actions) {
-            $actions->add(new DisableButton);
+            $row = $actions->row;
+            if ($row->is_using) {
+                $actions->add(new DisableButton);
+            } else {
+                $actions->add(new EnableButton);
+            }
             $actions->disableDelete();
             $actions->disableView();
         });

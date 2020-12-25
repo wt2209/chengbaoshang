@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\RenameButton;
+use App\Admin\Actions\Company\RenameButton;
 use App\Models\Category;
 use App\Models\Company;
 use Encore\Admin\Controllers\AdminController;

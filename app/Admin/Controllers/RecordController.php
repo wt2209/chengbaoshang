@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\QuitButton;
+use App\Admin\Actions\Record\QuitButton;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Record;
@@ -160,8 +160,8 @@ class RecordController extends AdminController
         $form->number('electric_start_base', '入住时电表底数');
         $form->number('water_start_base', '入住时水表底数');
         $form->date('quitted_at', '退房时间');
-        $form->number('electric_end_base', '入住时电表底数');
-        $form->number('water_end_base', '入住时水表底数');
+        $form->number('electric_end_base', '退房时电表底数');
+        $form->number('water_end_base', '退房时水表底数');
 
         return $form;
     }

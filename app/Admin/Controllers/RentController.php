@@ -2,8 +2,8 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\BatchCharge;
-use App\Admin\Actions\ChargeButton;
+use App\Admin\Actions\Rent\BatchCharge;
+use App\Admin\Actions\Rent\ChargeButton;
 use App\Models\Rent;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -46,13 +46,13 @@ class RentController extends AdminController
         $grid->column('start_date', '租金开始日');
         $grid->column('end_date', '租金结束日');
         $grid->column('status', '状态')->display(function () {
-            return $this->charged_at 
-            ?  '<span class="label label-success">已缴费</span>'
-            : '<span class="label label-warning">未缴费</span>';
+            return $this->charged_at
+                ?  '<span class="label label-success">已缴费</span>'
+                : '<span class="label label-warning">未缴费</span>';
         });
         $grid->column('charged_at', '缴费/扣款时间');
 
-        $grid->actions(function($actions){
+        $grid->actions(function ($actions) {
             $actions->disableDelete();
             $actions->disableView();
             $row = $actions->row;

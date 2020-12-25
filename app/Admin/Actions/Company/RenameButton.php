@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Actions;
+namespace App\Admin\Actions\Company;
 
 use App\Models\Rename;
 use Encore\Admin\Actions\RowAction;
@@ -15,7 +15,7 @@ class RenameButton extends RowAction
     public function handle(Model $model, Request $request)
     {
         // $model ...
-        DB::transaction(function () use($model, $request) {
+        DB::transaction(function () use ($model, $request) {
             $rename = new Rename();
             $rename->company_id = $model->id;
             $rename->new_name = $request->get('new_name');
@@ -34,7 +34,6 @@ class RenameButton extends RowAction
         $this->text('new_name', '新公司名称')->rules('required', [
             'required' => '必须填写',
         ]);
-        $this->date('renamed_at', '改名时间')->default(now()); 
+        $this->date('renamed_at', '改名时间')->default(now());
     }
-
 }

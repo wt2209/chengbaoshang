@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Admin\Actions;
+namespace App\Admin\Actions\Rent;
 
 use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class DepositRefundButton extends RowAction
+class ChargeButton extends RowAction
 {
-    public $name = '退押金';
+    public $name = '缴费';
 
     public function handle(Model $model, Request $request)
     {
-        if ($model->charged_at && !$model->refunded_at) {
-            $model->refunded_at = $request->refunded_at;
+        if (!$model->charged_at) {
+            $model->charged_at = $request->charged_at;
             $model->save();
         }
 
@@ -22,6 +22,6 @@ class DepositRefundButton extends RowAction
 
     public function form()
     {
-        $this->date('refunded_at', '退押金日期')->rules('required');
+        $this->date('charged_at', '缴费日期')->rules('required');
     }
 }

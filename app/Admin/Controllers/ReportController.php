@@ -2,16 +2,14 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\BatchCharge;
-use App\Admin\Actions\ChargeButton;
+use App\Admin\Actions\Report\BatchCharge;
+use App\Admin\Actions\Report\ChargeButton;
 use App\Admin\Actions\Report\DiscountButton;
 use App\Admin\Actions\Report\Generate;
 use App\Admin\Actions\Report\ImportDiscount;
 use App\Models\Report;
 use Encore\Admin\Controllers\AdminController;
-use Encore\Admin\Form;
 use Encore\Admin\Grid;
-use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
 
 class ReportController extends AdminController
@@ -40,15 +38,25 @@ class ReportController extends AdminController
             return $this->record->room->title;
         });
         $grid->column('company_name', '报表时公司名称');
-        $grid->column('start_date', '租金起止日')->display(function() {
+        $grid->column('start_date', '租金起止日')->display(function () {
             return $this->start_date . '—' . $this->end_date;
         });
-        $grid->column('year_month', '月度')->display(function(){
+        $grid->column('year_month', '月度')->display(function () {
             return $this->year . '-' . $this->month;
         });
         $grid->column('electric_money', '电费')->totalRow();
         $grid->column('water_money', '水费')->totalRow();
         $grid->column('rent', '租金')->totalRow();
+        $grid->column('status', '状态')->display(function () {
+            if ($this->charged_at) {
+                return '<span class="label label-success">已缴费</span>';
+            }
+            if ($this->discounted_at) {
+                return '<span class="label label-warning">已减免</span>';
+            } else {
+                return '<span class="label label-danger">未减免</span>';
+            }
+        });
         $grid->column('rent_discount', '减免额度');
         $grid->column('actual_rent', '减免后租金')->totalRow();
         $grid->column('bases', '水电详情')->expand(function ($model) {
@@ -69,12 +77,13 @@ class ReportController extends AdminController
             ], $bases);
         });
         $grid->column('charged_at', '缴费/扣款时间');
+        $grid->column('charge_way', '方式');
 
         $grid->disableCreateButton();
 
         $grid->actions(function ($actions) {
             $row = $actions->row;
-            if ($row->discounted_at) { // 已经有减免了
+            if ($row->discounted_at && !$row->charged_at) { // 已经有减免，但是没缴费
                 $actions->add(new ChargeButton);
             } else { // 还没有减免
                 $actions->add(new DiscountButton);

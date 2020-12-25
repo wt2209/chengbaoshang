@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\DisableButton;
+use App\Admin\Actions\EnableButton;
 use App\Models\Room;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -49,7 +50,12 @@ class RoomController extends AdminController
         });
 
         $grid->actions(function ($actions) {
-            $actions->add(new DisableButton);
+            $row = $actions->row;
+            if ($row->is_using) {
+                $actions->add(new DisableButton);
+            } else {
+                $actions->add(new EnableButton);
+            }
             $actions->disableDelete();
             $actions->disableView();
         });

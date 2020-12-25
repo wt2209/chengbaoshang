@@ -13,8 +13,8 @@ class DiscountButton extends RowAction
     public function handle(Model $model, Request $request)
     {
         $discount = (int) $request->discount;
-        if ($discount < 1 || $discount > 100) {
-            return $this->response()->error('错误：请输入1-100');
+        if ($discount < 0 || $discount > 100) {
+            return $this->response()->error('错误：请输入0-100');
         }
         $model->rent_discount = $discount / 100;
         $model->discounted_at = now();
@@ -26,6 +26,6 @@ class DiscountButton extends RowAction
 
     public function form()
     {
-        $this->text('discount', '减免额度')->placeholder('请输入1-100的减免额度')->rules('required');
+        $this->text('discount', '减免额度')->placeholder('请输入0-100的减免额度。单位：%')->rules('required');
     }
 }
