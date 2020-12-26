@@ -9,6 +9,7 @@ use App\Admin\Actions\Report\Generate;
 use App\Admin\Actions\Report\ImportDiscount;
 use App\Models\Report;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Widgets\Table;
 
@@ -83,10 +84,10 @@ class ReportController extends AdminController
 
         $grid->actions(function ($actions) {
             $row = $actions->row;
-            if ($row->discounted_at && !$row->charged_at) { // 已经有减免，但是没缴费
-                $actions->add(new ChargeButton);
-            } else { // 还没有减免
+            if (!$row->discounted_at) { // 还没有减免
                 $actions->add(new DiscountButton);
+            } else if (!$row->charged_at) { // 还没有缴费
+                $actions->add(new ChargeButton);
             }
             $actions->disableDelete();
             $actions->disableView();
@@ -100,5 +101,22 @@ class ReportController extends AdminController
             $tools->append(new ImportDiscount());
         });
         return $grid;
+    }
+
+    protected function form()
+    {
+        $form = new Form(new Report());
+
+        $form->date('start_date', '租期开始日期');
+        $form->date('end_date', '租期结束日期');
+        $form->number('year', '年');
+        $form->number('month', '月');
+        $form->decimal('money', __('Money'));   
+        $form->date('start_date', __('Start date'))->default(date('Y-m-d'));
+        $form->date('end_date', __('End date'))->default(date('Y-m-d'));
+        $form->date('charged_at', __('Charged at'))->default(date('Y-m-d'));
+        $form->switch('is_refund', __('Is refund'));
+
+        return $form;
     }
 }

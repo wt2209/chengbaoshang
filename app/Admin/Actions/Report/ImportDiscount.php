@@ -37,6 +37,8 @@ HTML;
     public function form()
     {
         $this->text('year_month', '填写月度')->placeholder('格式：2020-12')->rules('required');
-        $this->file('file', '请选择文件')->rules('required');
+        $this->file('file', '请选择文件')
+            ->help('支持xlsx、xls格式。<br>第一行是标题行：房间号、上月电表数、本月电表数、上月水表数、本月水表数。<br>第二行是数据行。')
+            ->rules('required');
     }
 }
