@@ -1,0 +1,71 @@
+.room-container {
+    padding: 0 !important;
+}
+
+.room {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    padding: 0px;
+}
+
+.room .header {
+    border-bottom: 1px solid #ddd;
+}
+
+.room .header .room-title {
+    line-height: 1.6em;
+    margin: 6px 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.room .header .room-title a {
+    color: #333;
+}
+
+.room .header .room-remark {
+    margin-left: 10px;
+    font-size: 12px;
+    line-height: 1.1em;
+}
+
+.room .body .room-content {
+    padding: 10px;
+    background-color: #5DADE2;
+    min-height: 140px;
+}
+
+.room .body .room-content p {
+    text-align: center;
+}
+
+.room .body .room-content .company-name {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.room .body .actions {
+    padding: 0;
+    margin: 0;
+    min-height: 41px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    list-style-type: none;
+    border-top: 1px solid #ddd;
+}
+
+.room .body .actions li {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    flex: 1;
+    border-right: 1px solid #ddd;
+}
+
+.room .body .actions li:last-child {
+    border-right: none;
+}

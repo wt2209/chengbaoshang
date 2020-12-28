@@ -16,8 +16,12 @@
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
+
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+
+Admin::css('/css/index.css');
 
 Grid::init(function (Grid $grid) {
     // $grid->disableActions();

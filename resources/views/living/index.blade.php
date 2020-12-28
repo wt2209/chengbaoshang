@@ -4,11 +4,11 @@
             <div class="box-header with-border">
                 <div style="display:flex;align-items:center;justify-content:space-between;">
                     <div class="search">
-                        <form class="form-inline">
+                        <form class="form-inline" method="GET" action="{{route('admin.livings.index')}}">
                             <div class="input-group">
-                                <input type="text" class="form-control" style="width:300px;" placeholder="公司名、房间号">
+                                <input type="text" name="keyword" value="{{request('keyword')}}" class="form-control" style="width:300px;" placeholder="公司名、房间号">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">
+                                    <button class="btn btn-default" type="submit">
                                         <span class="icon glyphicon glyphicon-search"></span>
                                     </button>
                                 </span>
@@ -16,20 +16,20 @@
                         </form>
                     </div>
                     <div class="operations" style="text-align: right;">
-                        <a href="#" class="btn btn-success btn-sm">
+                        {{-- <a href="#" class="btn btn-success btn-sm">
                             <i class="fa fa-plus"></i>
                             &nbsp;&nbsp;入住
                         </a>
                         <a href="#" class="btn btn-warning btn-sm">
                             退房
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
                 <div class="building" style="margin-top: 10px;">
                     <ul class="nav navbar-nav">
                         @foreach($buildings as $building => $units)
                         <li class="dropdown">
-                            <a id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 {{$building}}
                                 <span class="caret"></span>
                             </a>
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="box-body bordered">
-                @component('living.components.room')
+                @component('living.components.room', ['rooms'=>$rooms])
                 @endcomponent
             </div>
         </div>
