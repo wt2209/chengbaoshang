@@ -13,6 +13,8 @@ Route::group([
     'as'            => config('admin.route.prefix') . '.',
 ], function (Router $router) {
 
+    $router->get('/livings', 'LivingController@index')->name('livings.index');
+
     $router->get('/', 'HomeController@index')->name('home');
 
     $router->resource('categories', CategoryController::class)

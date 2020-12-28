@@ -9,6 +9,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Cache;
 
 class RoomController extends AdminController
 {
@@ -106,6 +107,13 @@ class RoomController extends AdminController
                 'required' => '必须填写',
             ]);
         $form->textarea('remark', '备注');
+
+        //保存前回调
+        $form->saving(function () {
+            if (Cache::has('buildings')) {
+                Cache::forget('buildings');
+            }
+        });
 
         return $form;
     }
