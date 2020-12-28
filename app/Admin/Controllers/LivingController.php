@@ -34,6 +34,21 @@ class LivingController extends Controller
         return $content;
     }
 
+    public function create(Content $content)
+    {
+        $content->title('入住');
+        $content->view('living/create');
+        return $content;
+    }
+
+    public function getEmptyRooms()
+    {
+        $rooms = Room::where('is_using', true)
+            ->whereNotIn('id', Record::where('is_living', true)->pluck('room_id')->toArray())
+            ->get();
+        return $rooms;
+    }
+
     protected function getRoomsByAreaAndBuilding($areaBuilding, $unit)
     {
         $arr = explode('-', $areaBuilding);

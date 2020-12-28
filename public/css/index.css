@@ -75,3 +75,26 @@
 .room .body .actions li:last-child {
     border-right: none;
 }
+
+.empty-room-container {
+    border: 1px solid #ddd;
+    height: 600px;
+    overflow-y: scroll;
+}
+
+.empty-room-container .empty-room-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.empty-room-container .empty-room-list li {
+    display: block;
+    padding: 3px 6px;
+    line-height: 1.8em;
+    border-bottom: 1px solid #ddd;
+
+}
+
+.empty-room-container .empty-room-list li:hover {
+    background-color: #f9fafc;
+}

@@ -14,6 +14,8 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/livings', 'LivingController@index')->name('livings.index');
+    $router->get('/livings/create', 'LivingController@create')->name('livings.create');
+    $router->get('/livings/empty-rooms', 'LivingController@getEmptyRooms')->name('livings.empty-rooms');
 
     $router->get('/', 'HomeController@index')->name('home');
 
