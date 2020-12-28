@@ -1,5 +1,5 @@
 @foreach ($rooms as $room)
-    <div class="col-sm-6 col-md-3 col-lg-2 room-container">
+    <div class="col-sm-6 col-md-3 room-container">
         <div class="room">
             <div class="header">
                 <h3 class="room-title">

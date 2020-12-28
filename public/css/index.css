@@ -8,6 +8,12 @@
     margin-bottom: 10px;
     border: 1px solid #ddd;
     padding: 0px;
+    transition-duration: 0.3s;
+}
+
+.room:hover {
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
+    transition-duration: 0.3s;
 }
 
 .room .header {
