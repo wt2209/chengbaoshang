@@ -22,6 +22,8 @@ class CreateCompaniesTable extends Migration
             $table->string('linkman', 4)->nullable()->comment('日常联系人');
             $table->string('linkman_phone', 13)->nullable()->comment('联系人电话');
             $table->string('remark')->nullable();
+            $table->date('lease_start'); // 用于外部单位等有租期的公司
+            $table->date('lease_end');
             $table->index('company_name');
             $table->timestamps();
         });

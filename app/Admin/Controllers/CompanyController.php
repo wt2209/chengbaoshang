@@ -36,6 +36,9 @@ class CompanyController extends AdminController
         $grid->column('manager_phone', '负责人电话');
         $grid->column('linkman', '日常联系人');
         $grid->column('linkman_phone', '联系人电话');
+        $grid->column('lease', '租期')->display(function () {
+            return $this->lease_start ? $this->lease_start . '—' . $this->lease_end : '无';
+        });
         $grid->column('remark', '备注');
         $grid->column('created_at', '最早入住公寓时间');
 
@@ -70,8 +73,18 @@ class CompanyController extends AdminController
     {
         $form = new Form(new Company());
 
+        // 存在租期的类型id
+        $categoryIdsWithLease = Category::where('has_lease', true)->pluck('id')->toArray();
         $form->select('category_id', '所属类型')
             ->options(Category::pluck('title', 'id'))
+            ->when($categoryIdsWithLease, function (Form $form) {
+                $form->date('lease_start', '租期开始日')
+                    ->default(null)
+                    ->rules('required', ['required' => '必须填写']);
+                $form->date('lease_end', '租期结束日')
+                    ->default(null)
+                    ->rules('required', ['required' => '必须填写']);
+            })
             ->rules('required', [
                 'required' => '必须选择',
             ]);

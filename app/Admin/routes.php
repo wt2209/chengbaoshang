@@ -15,8 +15,15 @@ Route::group([
 
     $router->get('/livings', 'LivingController@index')->name('livings.index');
     $router->get('/livings/create', 'LivingController@create')->name('livings.create');
-    $router->get('/livings/empty-rooms', 'LivingController@getEmptyRooms')->name('livings.empty-rooms');
 
+    // api
+    $router->get('/livings/empty-rooms', 'LivingController@getEmptyRooms')->name('livings.empty-rooms');
+    $router->get('/livings/all-companies', 'LivingController@getCompanies')->name('livings.all-companies');
+    $router->get('/livings/all-categories', 'LivingController@getCategories')->name('livings.all-categories');
+    // api end
+
+
+    
     $router->get('/', 'HomeController@index')->name('home');
 
     $router->resource('categories', CategoryController::class)

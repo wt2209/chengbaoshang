@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Company;
 use App\Models\Record;
 use App\Models\Room;
@@ -36,8 +37,10 @@ class LivingController extends Controller
 
     public function create(Content $content)
     {
+        $companies = Company::get();
+        $categories = Category::get();
         $content->title('入住');
-        $content->view('living/create');
+        $content->view('living/create', compact('companies', 'categories'));
         return $content;
     }
 
@@ -47,6 +50,18 @@ class LivingController extends Controller
             ->whereNotIn('id', Record::where('is_living', true)->pluck('room_id')->toArray())
             ->get();
         return $rooms;
+    }
+
+    public function getCompanies()
+    {
+        $companies = Company::get();
+        return $companies;
+    }
+
+    public function getCategories()
+    {
+        $categories = Category::get();
+        return $categories;
     }
 
     protected function getRoomsByAreaAndBuilding($areaBuilding, $unit)

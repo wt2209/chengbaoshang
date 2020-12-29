@@ -77,24 +77,46 @@
 }
 
 .empty-room-container {
-    border: 1px solid #ddd;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     height: 600px;
-    overflow-y: scroll;
+    overflow-y: hidden;
 }
 
 .empty-room-container .empty-room-list {
+    flex:1;
+    overflow-y: scroll;
     list-style-type: none;
+    margin-top: 3px;
+    border: 1px solid #ddd;
     padding: 0;
 }
 
 .empty-room-container .empty-room-list li {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 3px 6px;
     line-height: 1.8em;
     border-bottom: 1px solid #ddd;
+}
 
+.empty-room-container .empty-room-list li .left span {
+    margin-left:10px;
 }
 
 .empty-room-container .empty-room-list li:hover {
     background-color: #f9fafc;
+}
+
+.selected-room-list{
+    margin: 5px;
+    padding: 0;
+    list-style-type: none;
+}
+.selected-room-list li{
+    padding: 6px;
+    border-bottom: 1px solid #ddd;
 }
