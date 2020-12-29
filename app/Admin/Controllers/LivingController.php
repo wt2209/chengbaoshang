@@ -5,11 +5,13 @@ namespace App\Admin\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Company;
+use App\Models\Deposit;
 use App\Models\Record;
 use App\Models\Room;
 use Encore\Admin\Layout\Content;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class LivingController extends Controller
 {
@@ -44,6 +46,48 @@ class LivingController extends Controller
         return $content;
     }
 
+    public function store(Request $request)
+    {
+        $usedRoomIds = Record::whereIn('room_id', array_column($request->input('rooms'), 'room_id'))
+            ->where('is_living', true)
+            ->pluck('room_id')
+            ->toArray();
+        DB::transaction(function () use ($request, $usedRoomIds) {
+            $selectedRooms = $request->input('rooms');
+            foreach ($selectedRooms as $room) {
+                // 只有空房间才能入住
+                if (in_array($room['room_id'], $usedRoomIds)) {
+                    continue;
+                }
+                $data = [
+                    'company_id' => $request->company_id,
+                    'category_id' => $request->category_id,
+                    'entered_at' => $request->entered_at,
+                    'has_lease' => (int) $request->has_lease,
+                    'room_id' => $room['room_id'],
+                    'gender' => $room['gender'],
+                    'rent' => $room['rent'],
+                    'electric_start_base' => $room['electric_start_base'] ?? 0,
+                    'water_start_base' => $room['water_start_base'] ?? 0,
+                ];
+                if ($data['has_lease']) {
+                    $data['lease_start'] = $request->lease_start;
+                    $data['lease_end'] = $request->lease_end;
+                }
+                $record = Record::create($data);
+
+                // 创建押金记录
+                $deposit = new Deposit();
+                $deposit->record_id = $record->id;
+                $deposit->company_name = $record->company_name;
+                $deposit->money = $room['deposit'];
+                $deposit->billed_at = now();
+                $deposit->save();
+            }
+        });
+
+        dd($request->all());
+    }
     public function getEmptyRooms()
     {
         $rooms = Room::where('is_using', true)

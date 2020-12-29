@@ -86,7 +86,7 @@
 }
 
 .empty-room-container .empty-room-list {
-    flex:1;
+    flex: 1;
     overflow-y: scroll;
     list-style-type: none;
     margin-top: 3px;
@@ -104,19 +104,28 @@
 }
 
 .empty-room-container .empty-room-list li .left span {
-    margin-left:10px;
+    margin-left: 10px;
 }
 
 .empty-room-container .empty-room-list li:hover {
     background-color: #f9fafc;
 }
 
-.selected-room-list{
+.selected-room-list {
     margin: 5px;
     padding: 0;
     list-style-type: none;
 }
-.selected-room-list li{
+
+.selected-room-list li {
     padding: 6px;
     border-bottom: 1px solid #ddd;
+}
+
+.enter-create-area {
+    margin: 5px 10px;
+}
+
+.enter-create-area .item {
+    margin: 10px 0;
 }
