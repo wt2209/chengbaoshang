@@ -18,8 +18,7 @@ class CreateDepositsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('record_id');
             $table->decimal('money');
-            $table->string('company_name')->comment('开单子时公司的名字');
-            $table->date('billed_at')->comment('开单子的时间');
+            $table->string('company_name')->comment('生成时公司的名字');
             $table->date('charged_at')->nullable()->comment('交费时间/财务扣款时间');
             $table->string('charge_way')->nullable()->comment('缴费方式');
             $table->string('refund_company_name')->nullable()->comment('退房时的公司名字');
