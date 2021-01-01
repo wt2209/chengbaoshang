@@ -91,7 +91,7 @@
                 <div class="col-md-3">
                     <div class="empty-room-container">
                         <div class="filter">
-                            <input type="text" class="form-control" placeholder="筛选" @@input="filter">
+                            <input type="text" id="filter-input" class="form-control" placeholder="筛选">
                         </div>
 
                         <ul class="empty-room-list">
@@ -99,7 +99,7 @@
                             <li id="room-{{$room->id}}" ondblclick="selectRoom('{{$room->id}}')" data-id="{{$room->id}}" data-area="{{$room->area}}" data-title="{{$room->title}}" data-number="{{$room->default_number}}" data-deposit="{{$room->default_deposit}}" data-rent="{{$room->default_rent}}">
                                 <div class="left">
                                     <span>{{$room->area}}</span>
-                                    <span>{{$room->title}}</span>
+                                    <span class="empty-room-title">{{$room->title}}</span>
                                     <span>{{$room->default_number}}人间</span>
                                 </div>
                                 <div class="right">
@@ -272,6 +272,22 @@
             } else {
                 $('#lease-start').hide()
                 $('#lease-end').hide()
+            }
+        })
+
+        // 筛选
+        $('#filter-input').on('input',function() {
+            const text = $(this).val()
+            if ($(this).val()) {
+                $('.empty-room-title').each(function(index, element) {
+                    if ($(element).html().indexOf(text) === -1) {
+                        $(element).parents('li').hide()
+                    } else {
+                        $(element).parents('li').show()
+                    }
+                })
+            } else {
+                $('.empty-room-title').parents('li').show()
             }
         })
     })
