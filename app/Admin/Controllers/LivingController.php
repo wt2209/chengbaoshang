@@ -24,7 +24,7 @@ class LivingController extends Controller
             $rooms = $this->getRoomsByAreaAndBuilding($request->input('building'), $request->input('unit'));
         } else if ($request->has('keyword') && !empty($request->input('keyword'))) {
             $keyword = $request->input('keyword');
-            if (strpos('-', $keyword) !== 0) { // 房间号
+            if (strpos($keyword, '-') !== false) { // 房间号
                 $rooms =  $this->getRoomsByKeyword($keyword);
             } else { // 公司名
                 $rooms =  $this->getRoomsByCompany($keyword);
@@ -82,8 +82,8 @@ class LivingController extends Controller
                 $deposit->save();
             }
         });
-
-        return back();
+        admin_toastr('操作成功', 'success');
+        return redirect(route('admin.livings.index'));
     }
 
     protected function getRoomsByAreaAndBuilding($areaBuilding, $unit)
