@@ -38,7 +38,7 @@ HTML;
     {
         $this->text('year_month', '填写月度')->placeholder('格式：2020-12')->rules('required');
         $this->file('file', '请选择文件')
-            ->help('支持xlsx、xls格式。<br>第一行是标题行：房间号、上月电表数、本月电表数、上月水表数、本月水表数。<br>第二行是数据行。')
+            ->help('支持xlsx、xls格式。<br>第一行是标题行：公司名、减免额度。<br>第二行是数据行，减免额度必须是大于0小于1的数字，如：0.8、80%，最多支持2位小数。<br>公司名指的是公司当前的全名。')
             ->rules('required');
     }
 }

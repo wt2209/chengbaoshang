@@ -58,7 +58,9 @@ class ReportController extends AdminController
                 return '<span class="label label-danger">未减免</span>';
             }
         });
-        $grid->column('rent_discount', '减免额度');
+        $grid->column('rent_discount', '减免额度')->display(function ($discount) {
+            return ($discount * 100) . '%';
+        });
         $grid->column('actual_rent', '减免后租金')->totalRow();
         $grid->column('bases', '水电详情')->expand(function ($model) {
             $bases = [[
@@ -111,7 +113,7 @@ class ReportController extends AdminController
         $form->date('end_date', '租期结束日期');
         $form->number('year', '年');
         $form->number('month', '月');
-        $form->decimal('money', __('Money'));   
+        $form->decimal('money', __('Money'));
         $form->date('start_date', __('Start date'))->default(date('Y-m-d'));
         $form->date('end_date', __('End date'))->default(date('Y-m-d'));
         $form->date('charged_at', __('Charged at'))->default(date('Y-m-d'));

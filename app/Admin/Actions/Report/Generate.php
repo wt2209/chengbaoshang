@@ -45,9 +45,9 @@ class Generate extends Action
         }
 
         // 电单价
-        $electricPrice = 0.55;
+        $electricPrice = floatval($request->electric_price);
         // 水单价
-        $waterPrice = 3.7;
+        $waterPrice = floatval($request->water_price);
 
         // 已经生成过的
         $hasGeneratedIds = Report::where('year', $year)->where('month', $month)->pluck('record_id')->toArray();
@@ -119,5 +119,7 @@ HTML;
     public function form()
     {
         $this->text('year_month', '请填写月度')->placeholder('格式：2020-12')->rules('required');
+        $this->text('electric_price', '电单价')->default(0.55)->rules('required');
+        $this->text('water_price', '电单价')->default(3.7)->rules('required');
     }
 }

@@ -25,8 +25,8 @@ class DiscountImport implements ToCollection
         $data = [];
         $companyMapper = Company::pluck('id', 'company_name');
         foreach ($collection as $row) {
-            // 跳过减免额度不是数字的行（第一行）
-            if (!is_numeric($row[1])) {
+            // 跳过减免额度不是数字的行（第一行），或非法行
+            if (!is_numeric($row[1]) || $row[1] > 1 || $row[1] < 0) {
                 continue;
             }
             $companyId = $companyMapper[$row[0]];
@@ -44,7 +44,7 @@ class DiscountImport implements ToCollection
             ->where('month', $this->month)
             ->get();
 
-        foreach ($reports as $report ) {
+        foreach ($reports as $report) {
             $id = $report->record->company->id;
             if (isset($data[$id])) {
                 $report->rent_discount = $data[$id];
