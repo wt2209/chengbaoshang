@@ -88,9 +88,14 @@ class RecordController extends AdminController
             ]);
         });
 
+        $grid->disableCreateButton();
         $grid->disableRowSelector();
         $grid->actions(function ($actions) {
             $actions->add(new QuitButton);
+            // 不退房时，只能在居住页面修改，此处不能修改
+            if (!$actions->row->quitted_at) {
+                $actions->disableEdit();
+            }
             $actions->disableView();
         });
 
@@ -149,10 +154,7 @@ class RecordController extends AdminController
             ->rules('required', [
                 'required' => '必须选择',
             ]);
-        // 只在添加时允许有押金
-        if ($form->isCreating()) {
-            $form->decimal('deposit', '押金')->rules('required', ['required' => '必须填写']);
-        }
+        $form->decimal('deposit_money', '押金')->rules('required', ['required' => '必须填写']);
         $form->decimal('rent', '月租金')->rules('required', ['required' => '必须填写']);
         $form->date('entered_at', '入住时间')
             ->default(date('Y-m-d'))

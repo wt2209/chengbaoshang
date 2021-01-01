@@ -23,6 +23,10 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 
 Admin::css('/css/index.css');
+Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
+    $navbar->left(view('nav.left'));
+    $navbar->right(view('nav.right'));
+});
 
 Grid::init(function (Grid $grid) {
     // $grid->disableActions();

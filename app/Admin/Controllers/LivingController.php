@@ -78,7 +78,6 @@ class LivingController extends Controller
                 $deposit->record_id = $record->id;
                 $deposit->company_name = $record->company_name;
                 $deposit->money = $room['deposit'];
-                $deposit->billed_at = now();
                 $deposit->save();
             }
         });

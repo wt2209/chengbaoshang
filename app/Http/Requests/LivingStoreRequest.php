@@ -41,12 +41,10 @@ class LivingStoreRequest extends FormRequest
             'company_id' => [
                 'required',
                 'integer',
-                Rule::in(Company::pluck('id')->toArray()),
             ],
             'category_id' => [
                 'required',
                 'integer',
-                Rule::in(Category::pluck('id')->toArray()),
             ],
             'entered_at' => 'required|date',
             'has_lease' => 'required|boolean',
@@ -91,7 +89,7 @@ class LivingStoreRequest extends FormRequest
             'rooms.array' => '必须选择房间',
             'rooms.*.room_id.required' => '房间id非法',
             'rooms.*.room_id.integer' => '房间id非法',
-            'rooms.*.room_id.in' => '房间id非法',
+            'rooms.*.room_id.in' => '房间已经入住',
             'rooms.*.gender.required' => '房间必须选择性别',
             'rooms.*.gender.in' => '房间性别非法',
             'rooms.*.deposit.required' => '房间押金必须填写',

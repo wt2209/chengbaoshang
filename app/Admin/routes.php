@@ -17,15 +17,6 @@ Route::group([
     $router->get('/livings/create', 'LivingController@create')->name('livings.create');
     $router->post('/livings/store', 'LivingController@store')->name('livings.store');
 
-    // api
-    $router->get('/livings/empty-rooms', 'LivingController@getEmptyRooms')->name('livings.empty-rooms');
-    $router->get('/livings/all-companies', 'LivingController@getCompanies')->name('livings.all-companies');
-    $router->get('/livings/all-categories', 'LivingController@getCategories')->name('livings.all-categories');
-    $router->post('/livings/all-categories', 'LivingController@store')->name('livings.all-categories');
-    // api end
-
-
-
     $router->get('/', 'HomeController@index')->name('home');
 
     $router->resource('categories', CategoryController::class)
@@ -41,7 +32,7 @@ Route::group([
         ->only(['index']);
 
     $router->resource('records', RecordController::class)
-        ->only(['index', 'create', 'store', 'update', 'edit']);
+        ->only(['index', 'update', 'edit']);
 
     $router->resource('deposits', DepositController::class)
         ->only(['index', 'create', 'store', 'update', 'edit']);

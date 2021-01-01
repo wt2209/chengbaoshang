@@ -38,9 +38,9 @@ class DepositController extends AdminController
         $grid->column('record_room_title', '房间号')->display(function () {
             return $this->record->room->title;
         });
-        $grid->column('company_name', '开单时公司名称');
-        $grid->column('billed_at', '开具时间');
+        $grid->column('company_name', '入住时公司名称');
         $grid->column('money', '押金金额')->totalRow();
+        $grid->column('created_at', '生成时间');
         $grid->column('status', '状态')->display(function () {
             if ($this->refunded_at) {
                 return '<span class="label label-danger">已退费</span>';
