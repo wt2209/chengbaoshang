@@ -62,7 +62,7 @@ class LivingController extends Controller
                     'has_lease' => (int) $request->has_lease,
                     'room_id' => $room['room_id'],
                     'gender' => $room['gender'],
-                    'deposit' => $room['deposit'],
+                    'deposit_money' => $room['deposit'],
                     'rent' => $room['rent'],
                     'electric_start_base' => $room['electric_start_base'] ?? 0,
                     'water_start_base' => $room['water_start_base'] ?? 0,

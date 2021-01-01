@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Record extends Model
 {
     protected $fillable = [
-        'category_id', 'room_id', 'company_id', 'gender', 
-        'company_name', 'rent', 'is_living', 'entered_at', 
+        'category_id', 'room_id', 'company_id', 'gender',
+        'company_name', 'deposit_money', 'rent', 'is_living', 'entered_at',
         'quitted_at', 'has_lease', 'lease_start', 'lease_end',
-         'electric_start_base', 'electric_end_base', 
-         'water_start_base', 'water_end_base'
+        'electric_start_base', 'electric_end_base',
+        'water_start_base', 'water_end_base'
     ];
 
 

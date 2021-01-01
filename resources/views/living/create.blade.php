@@ -1,5 +1,4 @@
 <div class="row">
-
     <div class="col-md-12">
         <div class="box box-info" id="enter-operation">
             <div class="box-header with-border">
@@ -10,11 +9,8 @@
                     </div>
                 </div>
             </div>
-
             <div class="row">
-
                 <div class="col-md-9">
-
                     <form class="form-inline enter-create-area" pjax-container method="POST" action="{{route('admin.livings.store')}}">
                         {{ csrf_field() }}
                         @if ($errors->any())
@@ -265,6 +261,15 @@
             } else {
                 $('[name=has_lease][value=1]').prop('checked', false)
                 $('[name=has_lease][value=0]').prop("checked", true);
+                $('#lease-start').hide()
+                $('#lease-end').hide()
+            }
+        })
+        $('[name=has_lease]').change(function(){
+            if (parseInt($(this).val()) > 0) {
+                $('#lease-start').show()
+                $('#lease-end').show()
+            } else {
                 $('#lease-start').hide()
                 $('#lease-end').hide()
             }
