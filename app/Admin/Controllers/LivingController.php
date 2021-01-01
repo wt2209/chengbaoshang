@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LivingStoreRequest;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Deposit;
@@ -41,24 +42,19 @@ class LivingController extends Controller
     {
         $companies = Company::get();
         $categories = Category::get();
+        $emptyRooms = Room::where('is_using', true)
+            ->whereNotIn('id', Record::where('is_living', true)->pluck('room_id')->toArray())
+            ->get();
         $content->title('入住');
-        $content->view('living/create', compact('companies', 'categories'));
+        $content->view('living/create', compact('companies', 'categories', 'emptyRooms'));
         return $content;
     }
 
-    public function store(Request $request)
+    public function store(LivingStoreRequest $request)
     {
-        $usedRoomIds = Record::whereIn('room_id', array_column($request->input('rooms'), 'room_id'))
-            ->where('is_living', true)
-            ->pluck('room_id')
-            ->toArray();
-        DB::transaction(function () use ($request, $usedRoomIds) {
+        DB::transaction(function () use ($request) {
             $selectedRooms = $request->input('rooms');
             foreach ($selectedRooms as $room) {
-                // 只有空房间才能入住
-                if (in_array($room['room_id'], $usedRoomIds)) {
-                    continue;
-                }
                 $data = [
                     'company_id' => $request->company_id,
                     'category_id' => $request->category_id,
@@ -86,26 +82,7 @@ class LivingController extends Controller
             }
         });
 
-        dd($request->all());
-    }
-    public function getEmptyRooms()
-    {
-        $rooms = Room::where('is_using', true)
-            ->whereNotIn('id', Record::where('is_living', true)->pluck('room_id')->toArray())
-            ->get();
-        return $rooms;
-    }
-
-    public function getCompanies()
-    {
-        $companies = Company::get();
-        return $companies;
-    }
-
-    public function getCategories()
-    {
-        $categories = Category::get();
-        return $categories;
+        return back();
     }
 
     protected function getRoomsByAreaAndBuilding($areaBuilding, $unit)

@@ -23,9 +23,6 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 
 Admin::css('/css/index.css');
-Admin::js('/js/vue.2.6.11.js');
-Admin::js('/js/axios.0.21.0.min.js');
-Admin::js('/js/dayjs.1.8.21.min.js');
 
 Grid::init(function (Grid $grid) {
     // $grid->disableActions();
