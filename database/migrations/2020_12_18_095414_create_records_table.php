@@ -20,6 +20,7 @@ class CreateRecordsTable extends Migration
             $table->unsignedBigInteger('company_id')->nullable();
             $table->string('gender');
             $table->string('company_name')->default('')->comment('初始入住时公司的名字（改名前）');
+            $table->decimal('deposit')->comment('正式押金');
             $table->decimal('rent')->comment('正式租金');
             $table->boolean('is_living')->default(true)->comment('正常居住？退房？');
             $table->date('entered_at')->nullable()->comment('入住时间');

@@ -2,12 +2,9 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Company;
 use App\Models\Rename;
 use Encore\Admin\Controllers\AdminController;
-use Encore\Admin\Form;
 use Encore\Admin\Grid;
-use Encore\Admin\Show;
 
 class RenameController extends AdminController
 {
@@ -37,11 +34,11 @@ class RenameController extends AdminController
         $grid->disableActions();
         $grid->disableFilter();
         $grid->quickSearch(function ($model, $query) {
-            $model->whereHas('company', function ($q) use($query) {
+            $model->whereHas('company', function ($q) use ($query) {
                 $q->where('company_name', 'like', "%{$query}%");
             })
-            ->orWhere('new_name', 'like', "%{$query}%")
-            ->orWhere('old_name', 'like', "%{$query}%");
+                ->orWhere('new_name', 'like', "%{$query}%")
+                ->orWhere('old_name', 'like', "%{$query}%");
         })->placeholder('公司名');
 
         return $grid;

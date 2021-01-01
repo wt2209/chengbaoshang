@@ -35,6 +35,7 @@ class RecordController extends AdminController
         $grid->column('company_name', '入住时公司名称');
         $grid->column('room.title', '房间号');
         $grid->column('gender', '性别');
+        $grid->column('deposit', '押金');
         $grid->column('rent', '月租金');
         $grid->column('entered_at', '入住时间');
         $grid->column('has_lease', '租期')->display(function ($hasLease) {
