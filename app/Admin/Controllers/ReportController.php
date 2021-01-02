@@ -7,6 +7,7 @@ use App\Admin\Actions\Report\ChargeButton;
 use App\Admin\Actions\Report\DiscountButton;
 use App\Admin\Actions\Report\Generate;
 use App\Admin\Actions\Report\ImportDiscount;
+use App\Admin\Actions\Report\MonthReport;
 use App\Models\Report;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -104,6 +105,7 @@ class ReportController extends AdminController
         $grid->tools(function (Grid\Tools $tools) {
             $tools->append(new Generate());
             $tools->append(new ImportDiscount());
+            $tools->append(new MonthReport());
         });
         $grid->expandFilter();
         $grid->filter(function ($filter) {

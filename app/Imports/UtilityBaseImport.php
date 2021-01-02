@@ -2,7 +2,6 @@
 
 namespace App\Imports;
 
-use App\Models\Company;
 use App\Models\Room;
 use App\Models\UtilityBase;
 use Illuminate\Support\Collection;
