@@ -8,7 +8,6 @@ use App\Models\Rent;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
-use Encore\Admin\Show;
 
 class RentController extends AdminController
 {
@@ -64,6 +63,49 @@ class RentController extends AdminController
             $batch->disableDelete();
             $batch->add(new BatchCharge());
         });
+        $grid->disableCreateButton();
+        $grid->expandFilter();
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
+            $filter->column(1 / 2, function ($filter) {
+                $filter->where(function ($query) {
+                    $query->whereHas('record.company', function ($query) {
+                        $query->where('company_name', 'like', "%{$this->input}%");
+                    });
+                }, '公司名');
+                $filter->where(function ($query) {
+                    $arr = explode('-', $this->input);
+                    $query->where('year', $arr[0]);
+                    if (isset($arr[1])) {
+                        $query->where('month', $arr[1]);
+                    }
+                }, '月度')->placeholder('支持：2020，2020-7');
+                $filter->where(function ($query) {
+                    if ($this->input === 'uncharged') {
+                        $query->whereNull('charged_at');
+                    }
+                    if ($this->input === 'charged') {
+                        $query->whereNotNull('charged_at');
+                    }
+                }, '状态')->radio([
+                    'uncharged' => '未缴费&nbsp;&nbsp;&nbsp;',
+                    'charged' => '已缴费&nbsp;&nbsp;&nbsp;',
+                ]);
+                $filter->in('is_refund', '缴费/退费')->radio([
+                    0 => '缴费',
+                    1 => '退费',
+                ]);
+            });
+            $filter->column(1 / 2, function ($filter) {
+                $filter->where(function ($query) {
+                    $query->whereHas('record.room', function ($query) {
+                        $query->where('title', 'like', "%{$this->input}%");
+                    });
+                }, '房间号');
+                $filter->like('company_name', '原公司名');
+                $filter->between('charged_at', '缴费时间')->date();
+            });
+        });
 
         return $grid;
     }
@@ -78,15 +120,11 @@ class RentController extends AdminController
     {
         $form = new Form(new Rent());
 
-        $form->number('record_id', __('Record id'));
-        $form->text('company_name', __('Company name'));
-        $form->decimal('money', __('Money'));
-        $form->number('year', __('Year'));
-        $form->switch('month', __('Month'));
-        $form->date('start_date', __('Start date'))->default(date('Y-m-d'));
-        $form->date('end_date', __('End date'))->default(date('Y-m-d'));
-        $form->date('charged_at', __('Charged at'))->default(date('Y-m-d'));
-        $form->switch('is_refund', __('Is refund'));
+        $form->number('year', '年度');
+        $form->number('month', '月度');
+        $form->decimal('money', '金额');
+        $form->date('start_date', '开始日期')->default(date('Y-m-d'));
+        $form->date('end_date', '结束日期')->default(date('Y-m-d'));
 
         return $form;
     }

@@ -88,8 +88,11 @@ class ReportController extends AdminController
             $row = $actions->row;
             if (!$row->discounted_at) { // 还没有减免
                 $actions->add(new DiscountButton);
-            } else if (!$row->charged_at) { // 还没有缴费
+                $actions->disableEdit();
+            } else if (!$row->charged_at) { // 还没有缴费，此时可以修改
                 $actions->add(new ChargeButton);
+            } else {
+                $actions->disableEdit();
             }
             $actions->disableDelete();
             $actions->disableView();
@@ -102,6 +105,48 @@ class ReportController extends AdminController
             $tools->append(new Generate());
             $tools->append(new ImportDiscount());
         });
+        $grid->expandFilter();
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
+            $filter->column(1 / 2, function ($filter) {
+                $filter->where(function ($query) {
+                    $query->whereHas('record.company', function ($query) {
+                        $query->where('company_name', 'like', "%{$this->input}%");
+                    });
+                }, '公司名');
+                $filter->where(function ($query) {
+                    $arr = explode('-', $this->input);
+                    $query->where('year', $arr[0]);
+                    if (isset($arr[1])) {
+                        $query->where('month', $arr[1]);
+                    }
+                }, '月度')->placeholder('支持：2020，2020-7');
+                $filter->where(function ($query) {
+                    if ($this->input === 'undiscounted') {
+                        $query->whereNull('discounted_at');
+                    }
+                    if ($this->input === 'discounted') {
+                        $query->whereNotNull('discounted_at')->whereNull('charged_at');
+                    }
+                    if ($this->input === 'charged') {
+                        $query->whereNotNull('charged_at');
+                    }
+                }, '状态')->radio([
+                    'undiscounted' => '未减免&nbsp;&nbsp;&nbsp;',
+                    'discounted' => '已减免&nbsp;&nbsp;&nbsp;',
+                    'charged' => '已缴费&nbsp;&nbsp;&nbsp;',
+                ]);
+            });
+            $filter->column(1 / 2, function ($filter) {
+                $filter->where(function ($query) {
+                    $query->whereHas('record.room', function ($query) {
+                        $query->where('title', 'like', "%{$this->input}%");
+                    });
+                }, '房间号');
+                $filter->like('company_name', '原公司名');
+                $filter->between('charged_at', '缴费时间')->date();
+            });
+        });
         return $grid;
     }
 
@@ -113,11 +158,19 @@ class ReportController extends AdminController
         $form->date('end_date', '租期结束日期');
         $form->number('year', '年');
         $form->number('month', '月');
-        $form->decimal('money', __('Money'));
-        $form->date('start_date', __('Start date'))->default(date('Y-m-d'));
-        $form->date('end_date', __('End date'))->default(date('Y-m-d'));
-        $form->date('charged_at', __('Charged at'))->default(date('Y-m-d'));
-        $form->switch('is_refund', __('Is refund'));
+        $form->number('pre_electric_base', '上期电表数');
+        $form->number('current_electric_base', '本期电表数');
+        $form->number('electric_amount', '用电量');
+        $form->decimal('electric_price', '电单价');
+        $form->decimal('electric_money', '电费');
+        $form->number('pre_water_base', '上期水表数');
+        $form->number('current_water_base', '本期水表数');
+        $form->number('water_amount', '用水量');
+        $form->decimal('water_price', '水单价');
+        $form->decimal('water_money', '水费');
+        $form->decimal('rent', '金额');
+        $form->decimal('rent_discount', '减免额度');
+        $form->decimal('actual_rent', '减免后租金');
 
         return $form;
     }

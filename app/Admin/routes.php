@@ -35,13 +35,13 @@ Route::group([
         ->only(['index', 'update', 'edit']);
 
     $router->resource('deposits', DepositController::class)
-        ->only(['index', 'create', 'store', 'update', 'edit']);
+        ->only(['index', 'update', 'edit']);
 
     $router->resource('rents', RentController::class)
-        ->only(['index', 'create', 'store', 'update', 'edit', 'delete']);
+        ->only(['index', 'update', 'edit']);
 
     $router->resource('reports', ReportController::class)
-        ->only(['index', 'edit', 'update', 'delete']);
+        ->only(['index', 'edit', 'update']);
 
     $router->resource('utility-bases', UtilityBaseController::class)
         ->only(['index', 'create', 'store', 'update', 'edit', 'delete']);

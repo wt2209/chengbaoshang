@@ -29,12 +29,28 @@ class UtilityBaseController extends AdminController
         $grid = new Grid(new UtilityBase());
 
         $grid->column('room.title', '房间号');
+        $grid->column('year_month', '月度')->display(function () {
+            return $this->year . '-' . $this->month;
+        });
         $grid->column('pre_electric_base', '上期电表数');
         $grid->column('current_electric_base', '本期电表数');
         $grid->column('pre_water_base', '上期水表数');
         $grid->column('current_water_base', '本期水表数');
-        $grid->column('year_month', '月度')->display(function () {
-            return $this->year . '-' . $this->month;
+
+        $grid->expandFilter();
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
+            $filter->where(function ($query) {
+                $roomIds = Room::where('title', 'like', "%{$this->input}%")->pluck('id')->toArray();
+                $query->whereIn('room_id', $roomIds);
+            }, '房间号');
+            $filter->where(function ($query) {
+                $arr = explode('-', $this->input);
+                $query->where('year', $arr[0]);
+                if (isset($arr[1])) {
+                    $query->where('month', $arr[1]);
+                }
+            }, '月度')->placeholder('支持：2020，2020-7');
         });
 
         $grid->actions(function ($actions) {
