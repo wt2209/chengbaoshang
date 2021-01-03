@@ -31,6 +31,7 @@ class BillController extends AdminController
 
         $grid->column('company.company_name', '公司名称')->totalRow('合计');
         $grid->column('location', '房间号/位置');
+        $grid->column('type', '费用类型');
         $grid->column('description', '费用说明');
         $grid->column('money', '金额')->totalRow();
         $grid->column('status', '状态')->display(function () {
