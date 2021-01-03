@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Actions\Rent;
+namespace App\Admin\Actions\Bill;
 
 use Encore\Admin\Actions\RowAction;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +14,7 @@ class ChargeButton extends RowAction
     {
         if (!$model->charged_at) {
             $model->charged_at = $request->charged_at;
+            $model->charger = $request->charger;
             $model->save();
         }
 
@@ -23,5 +24,6 @@ class ChargeButton extends RowAction
     public function form()
     {
         $this->date('charged_at', '缴费日期')->default(now())->rules('required');
+        $this->text('charger', '缴费人')->rules('required');
     }
 }

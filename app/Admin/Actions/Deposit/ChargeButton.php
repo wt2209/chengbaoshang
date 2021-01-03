@@ -23,7 +23,7 @@ class ChargeButton extends RowAction
 
     public function form()
     {
-        $this->date('charged_at', '缴费/扣款日期')->rules('required');
+        $this->date('charged_at', '缴费/扣款日期')->default(now())->rules('required');
         $this->radio('charge_way', '缴费/扣款方式')->options([
             '扣款' => '扣款&nbsp;&nbsp;&nbsp;',
             '转账' => '转账&nbsp;&nbsp;&nbsp;',

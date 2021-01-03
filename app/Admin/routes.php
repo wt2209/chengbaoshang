@@ -45,4 +45,7 @@ Route::group([
 
     $router->resource('utility-bases', UtilityBaseController::class)
         ->only(['index', 'create', 'store', 'update', 'edit', 'delete']);
+        
+    $router->resource('bills', BillController::class)
+        ->only(['index', 'create', 'store', 'update', 'edit', 'delete']);
 });

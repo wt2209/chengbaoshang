@@ -29,10 +29,9 @@ class DiscountImport implements ToCollection
             if (!is_numeric($row[1]) || $row[1] > 1 || $row[1] < 0) {
                 continue;
             }
-            $companyId = $companyMapper[$row[0]];
             // 存在这个公司
-            if (isset($companyId)) {
-                $data[$companyId] = $row[1];
+            if (isset($companyMapper[$row[0]])) {
+                $data[$companyMapper[$row[0]]] = $row[1];
             }
         }
 

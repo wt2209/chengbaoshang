@@ -8,6 +8,6 @@
         <a href="{{route('admin.deposits.index')}}" type="button" class="btn btn-warning">房屋押金</a>
         <a href="{{route('admin.rents.index')}}" type="button" class="btn btn-warning">预交费房租</a>
         <a href="{{route('admin.reports.index')}}" type="button" class="btn btn-warning">月度报表</a>
-        <a href="{{route('admin.livings.index')}}" type="button" class="btn btn-warning">其他费用</a>
+        <a href="{{route('admin.bills.index')}}" type="button" class="btn btn-warning">其他费用</a>
     </div>
 </div>
