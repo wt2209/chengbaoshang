@@ -16,7 +16,13 @@ Route::group([
     $router->get('/livings', 'LivingController@index')->name('livings.index');
     $router->get('/livings/create', 'LivingController@create')->name('livings.create');
     $router->post('/livings/store', 'LivingController@store')->name('livings.store');
+    $router->get('/livings/quit', 'LivingController@quit')->name('livings.quit'); // 退房界面
+    $router->delete('/livings', 'LivingController@delete')->name('livings.delete'); // 执行退房操作
 
+    // api
+    $router->get('/livings/records/{companyId}', 'LivingController@getRecords')->name('livings.company-records');
+
+    
     $router->get('/', 'HomeController@index')->name('home');
 
     $router->resource('categories', CategoryController::class)
@@ -45,7 +51,7 @@ Route::group([
 
     $router->resource('utility-bases', UtilityBaseController::class)
         ->only(['index', 'create', 'store', 'update', 'edit', 'delete']);
-        
+
     $router->resource('bills', BillController::class)
         ->only(['index', 'create', 'store', 'update', 'edit', 'delete']);
 });

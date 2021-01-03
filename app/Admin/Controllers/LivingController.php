@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LivingQuitRequest;
 use App\Http\Requests\LivingStoreRequest;
 use App\Models\Category;
 use App\Models\Company;
@@ -83,6 +84,39 @@ class LivingController extends Controller
         });
         admin_toastr('操作成功', 'success');
         return redirect(route('admin.livings.index'));
+    }
+
+    public function quit(Content $content)
+    {
+        $companies = Company::get();
+        $content->title('退房');
+        $content->view('living/quit', compact('companies'));
+        return $content;
+    }
+
+    public function delete(LivingQuitRequest $request)
+    {
+        DB::transaction(function () use($request) {
+            $company = Company::find($request->company_id);
+            foreach ($request->records as $record) {
+                $model = Record::find($record['id']);
+                // 确保数据无误
+                if ($model && $model->company_id = $company->id) {
+                    $model->is_living = false;
+                    $model->quitted_at = $request->quitted_at;
+                    $model->electric_end_base = $request->electric_end_base;
+                    $model->water_end_base = $request->water_end_base;
+                    $model->save();
+                }
+            }
+        });
+        admin_toastr('操作成功', 'success');
+        return redirect(route('admin.livings.index'));
+    }
+
+    public function getRecords($companyId)
+    {
+        return Record::with(['room'])->where('is_living', true)->where('company_id', $companyId)->get();
     }
 
     protected function getRoomsByAreaAndBuilding($areaBuilding, $unit)

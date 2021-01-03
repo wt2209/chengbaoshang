@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Models\Category;
 use App\Models\Company;
-use App\Models\Record;
 use App\Models\Room;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -40,11 +39,11 @@ class LivingStoreRequest extends FormRequest
         return [
             'company_id' => [
                 'required',
-                'integer',
+                Rule::in(Company::pluck('id')->toArray()),
             ],
             'category_id' => [
                 'required',
-                'integer',
+                Rule::in(Category::pluck('id')->toArray()),
             ],
             'entered_at' => 'required|date',
             'has_lease' => 'required|boolean',
@@ -71,10 +70,8 @@ class LivingStoreRequest extends FormRequest
     {
         return [
             'company_id.required' => '必须选择公司',
-            'company_id.integer' => '必须选择公司',
             'company_id.in' => '必须选择公司',
             'category_id.required' => '必须选择类型',
-            'category_id.integer' => '必须选择类型',
             'category_id.in' => '必须选择类型',
             'entered_at.required' => '必须填写入住时间',
             'entered_at.date' => '入住时间格式错误',

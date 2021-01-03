@@ -115,12 +115,6 @@
     </div>
 </div>
 <script>
-    $('form button[type=submit]').click(function(e) {
-        e.preventDefault();
-        var form = $(this).parents('form');
-        form.submit();
-    });
-
     // 已经选中的房间
     const selectedRooms = []
     // 选择房间
@@ -143,7 +137,6 @@
     }
     // 删除已选房间
     function removeRoom(roomId) {
-        console.log(roomId)
         const index = selectedRooms.findIndex(r => r.room_id === parseInt(roomId))
         if (index !== -1) {
             selectedRooms.splice(index, 1)
@@ -253,7 +246,6 @@
                 $('#lease-end').show()
                 // 之前暂存的日期
                 const leaseEnd = $('[name=company_id]').data('leaseEnd')
-                console.log(leaseEnd)
                 // 更新租期结束日的值
                 $('#lease-end input').val(leaseEnd)
                 $('#lease-end').datetimepicker('update')
