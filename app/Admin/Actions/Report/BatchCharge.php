@@ -30,9 +30,8 @@ class BatchCharge extends BatchAction
     {
         $this->date('charged_at', '缴费/扣款日期')->default(now())->rules('required');
         $this->radio('charge_way', '缴费/扣款方式')->options([
-            '扣款' => '扣款&nbsp;&nbsp;&nbsp;',
-            '转账' => '转账&nbsp;&nbsp;&nbsp;',
-            '现金' => '现金&nbsp;&nbsp;&nbsp;',
-        ])->default('扣款');
+            '工程款扣款' => '工程款扣款&nbsp;&nbsp;&nbsp;',
+            '自行缴费' => '自行缴费&nbsp;&nbsp;&nbsp;',
+        ])->default('工程款扣款');
     }
 }

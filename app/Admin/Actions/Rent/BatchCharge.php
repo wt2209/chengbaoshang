@@ -17,7 +17,7 @@ class BatchCharge extends BatchAction
         foreach ($collection as $model) {
             if (!$model->charged_at) {
                 $model->charged_at = $chargedAt;
-                $model->charge_way = $way;
+                $model->charge_way = '转账';
                 $model->save();
             }
         }

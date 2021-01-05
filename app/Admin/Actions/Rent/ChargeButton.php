@@ -14,6 +14,7 @@ class ChargeButton extends RowAction
     {
         if (!$model->charged_at) {
             $model->charged_at = $request->charged_at;
+            $model->charge_way = '转账';
             $model->save();
         }
 

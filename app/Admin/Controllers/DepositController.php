@@ -36,6 +36,11 @@ class DepositController extends AdminController
         $grid->column('record_room_title', '房间号')->display(function () {
             return $this->record->room->title;
         });
+        $grid->column('record.is_living', '在住')->display(function ($isLiving) {
+            return $isLiving
+                ? '<span class="label label-success">在住</span>'
+                : '<span class="label label-danger">已退房</span>';
+        });
         $grid->column('company_name', '入住时公司名称');
         $grid->column('money', '押金金额')->totalRow();
         $grid->column('created_at', '生成时间');

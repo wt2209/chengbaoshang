@@ -35,20 +35,20 @@ class ReportController extends AdminController
 
         $grid->column('record_company_name', '公司当前名称')->display(function () {
             return $this->record->company->company_name;
-        })->totalRow('合计');
+        });
         $grid->column('record_room_title', '房间号')->display(function () {
             return $this->record->room->title;
         });
         $grid->column('company_name', '报表时公司名称');
         $grid->column('start_date', '租金起止日')->display(function () {
-            return $this->start_date . '—' . $this->end_date;
+            return date('m-d', strtotime($this->start_date)) . '—' . date('m-d', strtotime($this->end_date));
         });
         $grid->column('year_month', '月度')->display(function () {
             return $this->year . '-' . $this->month;
         });
-        $grid->column('electric_money', '电费')->totalRow();
-        $grid->column('water_money', '水费')->totalRow();
-        $grid->column('rent', '租金')->totalRow();
+        $grid->column('electric_money', '电费');
+        $grid->column('water_money', '水费');
+        $grid->column('rent', '租金');
         $grid->column('status', '状态')->display(function () {
             if ($this->charged_at) {
                 return '<span class="label label-success">已缴费</span>';
@@ -62,7 +62,10 @@ class ReportController extends AdminController
         $grid->column('rent_discount', '减免额度')->display(function ($discount) {
             return ($discount * 100) . '%';
         });
-        $grid->column('actual_rent', '减免后租金')->totalRow();
+        $grid->column('actual_rent', '减免后租金');
+        $grid->column('total', '合计')->display(function () {
+            return $this->actual_rent + $this->electric_money + $this->water_money;
+        });
         $grid->column('bases', '水电详情')->expand(function ($model) {
             $bases = [[
                 $model->pre_electric_base,

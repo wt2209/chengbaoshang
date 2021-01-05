@@ -38,6 +38,11 @@ class Record extends Model
         return $this->hasMany(Rent::class);
     }
 
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
+
     /**
      * 每一条入住记录只有一条押金记录
      */

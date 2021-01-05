@@ -17,7 +17,7 @@ class BatchCharge extends BatchAction
         foreach ($collection as $model) {
             if (!$model->charged_at) {
                 $model->charged_at = $chargedAt;
-                $model->charge_way = $way;
+                $model->charge_way = '转账';
                 $model->save();
             }
         }
@@ -28,10 +28,5 @@ class BatchCharge extends BatchAction
     public function form()
     {
         $this->date('charged_at', '缴费/扣款日期')->default(now())->rules('required');
-        $this->radio('charge_way', '缴费/扣款方式')->options([
-            '扣款' => '扣款&nbsp;&nbsp;&nbsp;',
-            '转账' => '转账&nbsp;&nbsp;&nbsp;',
-            '现金' => '现金&nbsp;&nbsp;&nbsp;',
-        ])->default('扣款');
     }
 }
