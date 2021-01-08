@@ -32,6 +32,7 @@ class CompanyController extends AdminController
             return $categoryMapper[$categoryId];
         })->filter($categoryMapper);
         $grid->column('company_name', '公司名称');
+        $grid->column('business', '业务范围');
         $grid->column('manager', '负责人');
         $grid->column('manager_phone', '负责人电话');
         $grid->column('linkman', '日常联系人');
@@ -98,6 +99,7 @@ class CompanyController extends AdminController
                 'unique' => '此公司已存在',
             ]);
         $form->text('manager', '负责人');
+        $form->text('business', '业务范围');
         $form->text('manager_phone', '负责人电话');
         $form->text('linkman', '日常联系人');
         $form->text('linkman_phone', '联系人电话');

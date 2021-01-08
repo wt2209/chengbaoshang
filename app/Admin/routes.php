@@ -13,6 +13,8 @@ Route::group([
     'as'            => config('admin.route.prefix') . '.',
 ], function (Router $router) {
 
+    $router->get('/migrate', 'HomeController@migrate')->name('migrate');
+
     $router->get('/livings', 'LivingController@index')->name('livings.index');
     $router->get('/livings/create', 'LivingController@create')->name('livings.create');
     $router->post('/livings/store', 'LivingController@store')->name('livings.store');

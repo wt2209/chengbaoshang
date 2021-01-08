@@ -5,7 +5,7 @@
 .room {
     margin-left: 5px;
     margin-right: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     border: 1px solid #ddd;
     padding: 0px;
     transition-duration: 0.3s;
@@ -17,10 +17,12 @@
 }
 
 .room .header {
+    min-height: 69px;
     border-bottom: 1px solid #ddd;
 }
 
 .room .header .room-title {
+    display: flex;
     line-height: 1.6em;
     margin: 6px 10px;
     font-size: 16px;
@@ -28,7 +30,14 @@
 }
 
 .room .header .room-title a {
+    flex: 3;
     color: #333;
+}
+
+.room .header .room-title .serial{
+    flex: 1;
+    text-align: right;
+    font-weight: normal;
 }
 
 .room .header .room-remark {
@@ -40,11 +49,11 @@
 .room .body .room-content {
     padding: 10px;
     background-color: #5DADE2;
-    min-height: 140px;
+    min-height: 160px;
 }
 
 .room .body .room-content p {
-    text-align: center;
+    margin-bottom: 0;
 }
 
 .room .body .room-content .company-name {
@@ -55,7 +64,7 @@
 .room .body .actions {
     padding: 0;
     margin: 0;
-    min-height: 41px;
+    min-height: 31px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -66,8 +75,8 @@
 
 .room .body .actions li {
     text-align: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     flex: 1;
     border-right: 1px solid #ddd;
 }

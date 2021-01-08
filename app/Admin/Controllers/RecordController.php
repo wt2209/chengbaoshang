@@ -29,6 +29,7 @@ class RecordController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Record());
+        $grid->model()->with(['category', 'company', 'room'])->orderBy('id', 'desc');
 
         $grid->column('category.title', '所属类型');
         $grid->column('company.company_name', '当前公司名称');

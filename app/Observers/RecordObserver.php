@@ -14,7 +14,6 @@ class RecordObserver
     {
         // 完善其他信息
         $record->company_name = $record->company->company_name;
-        $record->is_living = true;
         $record->save();
 
         // 若有租期，则直接生成整个租期的租金

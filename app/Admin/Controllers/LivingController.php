@@ -41,7 +41,7 @@ class LivingController extends Controller
 
     public function create(Content $content)
     {
-        $companies = Company::get();
+        $companies = Company::orderBy('company_name', 'asc')->get();
         $categories = Category::get();
         $emptyRooms = Room::where('is_using', true)
             ->whereNotIn('id', Record::where('is_living', true)->pluck('room_id')->toArray())
