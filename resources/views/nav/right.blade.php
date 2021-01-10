@@ -13,8 +13,8 @@
 </li>
 
 <li>
-    <a href="#">
-      <i class="fa fa-flag-o"></i>
+    <a href="{{route('admin.statistics.uncharged')}}">
+      欠费
       <span class="label label-danger">9</span>
     </a>
 </li>

@@ -58,6 +58,17 @@ class BillController extends AdminController
                     $query->whereIn('company_id', $companyIds);
                 }, '公司名');
                 $filter->like('type', '费用类型');
+                $filter->where(function ($query) {
+                    if ($this->input === 'uncharged') {
+                        $query->whereNull('charged_at');
+                    }
+                    if ($this->input === 'charged') {
+                        $query->whereNotNull('charged_at');
+                    }
+                }, '状态')->radio([
+                    'uncharged' => '未缴费&nbsp;&nbsp;&nbsp;',
+                    'charged' => '已缴费&nbsp;&nbsp;&nbsp;',
+                ]);
             });
             $filter->column(1 / 2, function ($filter) {
                 $filter->like('location', '房间/位置');

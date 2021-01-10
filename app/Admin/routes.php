@@ -24,7 +24,7 @@ Route::group([
     // api
     $router->get('/livings/records/{companyId}', 'LivingController@getRecords')->name('livings.company-records');
 
-    
+
     $router->get('/', 'HomeController@index')->name('home');
 
     $router->resource('categories', CategoryController::class)
@@ -56,4 +56,7 @@ Route::group([
 
     $router->resource('bills', BillController::class)
         ->only(['index', 'create', 'store', 'update', 'edit', 'delete']);
+
+
+    $router->get('statistics/uncharged', 'StatisticController@uncharged')->name('statistics.uncharged');
 });
