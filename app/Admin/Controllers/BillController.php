@@ -5,14 +5,18 @@ namespace App\Admin\Controllers;
 use App\Admin\Actions\Bill\BatchCharge;
 use App\Admin\Actions\Bill\ChargeButton;
 use App\Admin\Actions\Bill\ImportBills;
+use App\Admin\Traits\PermissionCheck;
 use App\Models\Bill;
 use App\Models\Company;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 
 class BillController extends AdminController
 {
+    use PermissionCheck;
+    protected $permission = 'bills';
     /**
      * Title for current resource.
      *
@@ -61,15 +65,25 @@ class BillController extends AdminController
             });
         });
 
+        if (!Admin::user()->can('bills.create')) {
+            $grid->disableCreateButton();
+        }
+
         $grid->actions(function ($actions) {
-            $actions->add(new ChargeButton);
+            if (Admin::user()->can('bills.charge')) {
+                $actions->add(new ChargeButton);
+            }
             $actions->disableView();
         });
         $grid->batchActions(function ($batch) {
-            $batch->add(new BatchCharge());
+            if (Admin::user()->can('bills.charge')) {
+                $batch->add(new BatchCharge());
+            }
         });
         $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new ImportBills());
+            if (Admin::user()->can('bills.import')) {
+                $tools->append(new ImportBills());
+            }
         });
 
         return $grid;
@@ -83,11 +97,6 @@ class BillController extends AdminController
     protected function form()
     {
         $form = new Form(new Bill());
-
-        if ($form->isCreating()) { // 新增记录时，只使用空房间
-
-        } else { // isEditing
-        }
 
         $form->select('company_id', '公司名称')
             ->options(Company::pluck('company_name', 'id'))
@@ -104,7 +113,7 @@ class BillController extends AdminController
             $form->text('charger', '缴费人');
             $form->text('charge_way', '缴费方式');
         }
-     
+
         return $form;
     }
 }

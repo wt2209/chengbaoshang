@@ -2,12 +2,16 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Traits\PermissionCheck;
+use App\Exports\RenameExport;
 use App\Models\Rename;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Grid;
 
 class RenameController extends AdminController
 {
+    use PermissionCheck;
+    protected $permission = 'renames';
     /**
      * Title for current resource.
      *
@@ -40,6 +44,8 @@ class RenameController extends AdminController
                 ->orWhere('new_name', 'like', "%{$query}%")
                 ->orWhere('old_name', 'like', "%{$query}%");
         })->placeholder('公司名');
+
+        $grid->exporter(new RenameExport);
 
         return $grid;
     }

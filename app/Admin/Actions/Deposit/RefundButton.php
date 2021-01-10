@@ -3,6 +3,7 @@
 namespace App\Admin\Actions\Deposit;
 
 use Encore\Admin\Actions\RowAction;
+use Encore\Admin\Auth\Permission;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,8 @@ class RefundButton extends RowAction
 
     public function handle(Model $model, Request $request)
     {
+        Permission::check('deposits.refund');
+
         if ($model->charged_at && !$model->refunded_at) {
             $model->refunded_at = $request->refunded_at;
             $model->refund_company_name = $model->record->company->company_name;

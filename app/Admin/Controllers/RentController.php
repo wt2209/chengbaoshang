@@ -4,13 +4,18 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Rent\BatchCharge;
 use App\Admin\Actions\Rent\ChargeButton;
+use App\Admin\Traits\PermissionCheck;
+use App\Exports\RentExport;
 use App\Models\Rent;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 
 class RentController extends AdminController
 {
+    use PermissionCheck;
+    protected $permission = 'rents';
     /**
      * Title for current resource.
      *
@@ -49,19 +54,24 @@ class RentController extends AdminController
                 ?  '<span class="label label-success">已缴费</span>'
                 : '<span class="label label-warning">未缴费</span>';
         });
-        $grid->column('charged_at', '缴费/扣款时间');
+        $grid->column('charged_at', '缴费时间');
 
         $grid->actions(function ($actions) {
             $actions->disableDelete();
             $actions->disableView();
             $row = $actions->row;
-            if (!$row->charged_at) {
+            if (!$row->charged_at && Admin::user()->can('rents.charge')) {
                 $actions->add(new ChargeButton);
+            }
+            if (!Admin::user()->can('rents.edit')) {
+                $actions->disableEdit();
             }
         });
         $grid->batchActions(function ($batch) {
             $batch->disableDelete();
-            $batch->add(new BatchCharge());
+            if (Admin::user()->can('rents.charge')) {
+                $batch->add(new BatchCharge());
+            }
         });
         $grid->disableCreateButton();
         $grid->expandFilter();
@@ -106,6 +116,8 @@ class RentController extends AdminController
                 $filter->between('charged_at', '缴费时间')->date();
             });
         });
+
+        $grid->exporter(new RentExport);
 
         return $grid;
     }

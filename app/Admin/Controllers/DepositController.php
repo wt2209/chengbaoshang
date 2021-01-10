@@ -6,13 +6,18 @@ use App\Admin\Actions\Deposit\BatchCharge;
 use App\Admin\Actions\Deposit\ChargeButton;
 use App\Admin\Actions\Deposit\BatchRefund;
 use App\Admin\Actions\Deposit\RefundButton;
+use App\Admin\Traits\PermissionCheck;
+use App\Exports\DepositExport;
 use App\Models\Deposit;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 
 class DepositController extends AdminController
 {
+    use PermissionCheck;
+    protected $permission = 'deposits';
     /**
      * Title for current resource.
      *
@@ -101,18 +106,25 @@ class DepositController extends AdminController
             $actions->disableDelete();
             $actions->disableView();
             $row = $actions->row;
-            if (!$row->charged_at) {
+            if (!$row->charged_at && Admin::user()->can('deposits.charge')) {
                 $actions->add(new ChargeButton);
             }
-            if ($row->charged_at && !$row->refunded_at) {
+            if ($row->charged_at && !$row->refunded_at && Admin::user()->can('deposits.refund')) {
                 $actions->add(new RefundButton);
             }
         });
         $grid->batchActions(function ($batch) {
             $batch->disableDelete();
-            $batch->add(new BatchCharge());
-            $batch->add(new BatchRefund());
+            if (Admin::user()->can('deposits.charge')) {
+                $batch->add(new BatchCharge());
+            }
+            if (Admin::user()->can('deposits.refund')) {
+                $batch->add(new BatchRefund());
+            }
         });
+
+        $grid->exporter(new DepositExport);
+
         return $grid;
     }
 

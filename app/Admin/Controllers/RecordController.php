@@ -3,17 +3,22 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Record\QuitButton;
+use App\Admin\Traits\PermissionCheck;
+use App\Exports\RecordExport;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Record;
 use App\Models\Room;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Widgets\Table;
 
 class RecordController extends AdminController
 {
+    use PermissionCheck;
+    protected $permission = 'records';
     /**
      * Title for current resource.
      *
@@ -32,7 +37,7 @@ class RecordController extends AdminController
         $grid->model()->with(['category', 'company', 'room'])->orderBy('id', 'desc');
 
         $grid->column('category.title', '所属类型');
-        $grid->column('company.company_name', '当前公司名称');
+        $grid->column('company.company_name', '公司当前名称');
         $grid->column('company_name', '入住时公司名称');
         $grid->column('room.title', '房间号');
         $grid->column('gender', '性别');
@@ -92,13 +97,17 @@ class RecordController extends AdminController
         $grid->disableCreateButton();
         $grid->disableRowSelector();
         $grid->actions(function ($actions) {
-            $actions->add(new QuitButton);
+            if (Admin::user()->can('records.quit')) {
+                $actions->add(new QuitButton);
+            }
             // 不退房时，只能在居住页面修改，此处不能修改
-            if (!$actions->row->quitted_at) {
+            if (!$actions->row->quitted_at || !Admin::user()->can('records.edit')) {
                 $actions->disableEdit();
             }
             $actions->disableView();
         });
+
+        $grid->exporter(new RecordExport);
 
         return $grid;
     }

@@ -3,6 +3,7 @@
 namespace App\Admin\Actions\Deposit;
 
 use Encore\Admin\Actions\BatchAction;
+use Encore\Admin\Auth\Permission;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,8 @@ class BatchCharge extends BatchAction
 
     public function handle(Collection $collection, Request $request)
     {
-        $way = $request->charge_way;
+        Permission::check('deposits.charge');
+        
         $chargedAt = $request->charged_at;
         foreach ($collection as $model) {
             if (!$model->charged_at) {

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Traits\PermissionCheck;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LivingQuitRequest;
 use App\Http\Requests\LivingStoreRequest;
@@ -10,6 +11,7 @@ use App\Models\Company;
 use App\Models\Deposit;
 use App\Models\Record;
 use App\Models\Room;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Layout\Content;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -19,6 +21,8 @@ class LivingController extends Controller
 {
     public function index(Content $content, Request $request)
     {
+        Permission::check('livings.index');
+
         $buildings = $this->getBuildings();
 
         if ($request->has('building') && $request->has('unit')) {
@@ -41,6 +45,8 @@ class LivingController extends Controller
 
     public function create(Content $content)
     {
+        Permission::check('livings.create');
+        
         $companies = Company::orderBy('company_name', 'asc')->get();
         $categories = Category::get();
         $emptyRooms = Room::where('is_using', true)
@@ -88,6 +94,8 @@ class LivingController extends Controller
 
     public function quit(Content $content)
     {
+        Permission::check('livings.quit');
+        
         $companies = Company::get();
         $content->title('退房');
         $content->view('living/quit', compact('companies'));

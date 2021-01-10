@@ -3,6 +3,7 @@
 namespace App\Admin\Actions\Bill;
 
 use Encore\Admin\Actions\RowAction;
+use Encore\Admin\Auth\Permission;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,8 @@ class ChargeButton extends RowAction
 
     public function handle(Model $model, Request $request)
     {
+        Permission::check('bills.charge');
+
         if (!$model->charged_at) {
             $model->charged_at = $request->charged_at;
             $model->charger = $request->charger;

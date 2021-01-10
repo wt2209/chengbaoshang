@@ -4,8 +4,10 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\DisableButton;
 use App\Admin\Actions\EnableButton;
+use App\Admin\Traits\PermissionCheck;
 use App\Models\Room;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Cache;
 
 class RoomController extends AdminController
 {
+    use PermissionCheck;
+    protected $permission = 'rooms';
     /**
      * Title for current resource.
      *
@@ -50,11 +54,16 @@ class RoomController extends AdminController
             $filter->equal('title', '房间号');
         });
 
+        if (!Admin::user()->can('rooms.create')) {
+            $grid->disableCreateButton();
+        }
+
         $grid->actions(function ($actions) {
             $row = $actions->row;
-            if ($row->is_using) {
+            if ($row->is_using && Admin::user()->can('rooms.disable')) {
                 $actions->add(new DisableButton);
-            } else {
+            }
+            if (!$row->is_using && Admin::user()->can('rooms.enable')) {
                 $actions->add(new EnableButton);
             }
             $actions->disableDelete();

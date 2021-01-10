@@ -3,6 +3,7 @@
 namespace App\Admin\Actions\Deposit;
 
 use Encore\Admin\Actions\BatchAction;
+use Encore\Admin\Auth\Permission;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,8 @@ class BatchRefund extends BatchAction
 
     public function handle(Collection $collection, Request $request)
     {
+        Permission::check('deposits.refund');
+
         $refundedAt = $request->refunded_at;
         foreach ($collection as $model) {
             if ($model->charged_at && !$model->refunded_at) {

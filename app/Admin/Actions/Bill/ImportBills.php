@@ -4,6 +4,7 @@ namespace App\Admin\Actions\Bill;
 
 use App\Imports\BillImport;
 use Encore\Admin\Actions\Action;
+use Encore\Admin\Auth\Permission;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -13,6 +14,8 @@ class ImportBills extends Action
 
     public function handle(Request $request)
     {
+        Permission::check('bills.import');
+
         $file = $request->file('file');
 
         // 已经存在discount的记录不会再次导入

@@ -3,14 +3,20 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Company\RenameButton;
+use App\Admin\Traits\PermissionCheck;
+use App\Exports\CompanyExport;
 use App\Models\Category;
 use App\Models\Company;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 
 class CompanyController extends AdminController
 {
+    use PermissionCheck;
+    protected $permission = 'companies';
     /**
      * Title for current resource.
      *
@@ -56,11 +62,21 @@ class CompanyController extends AdminController
 
         $grid->disableRowSelector();
         $grid->disableFilter();
+        if (!Admin::user()->can('companies.create')) {
+            $grid->disableCreateButton();
+        }
         $grid->actions(function ($actions) {
-            $actions->add(new RenameButton);
+            if (Admin::user()->can('companies.rename')) {
+                $actions->add(new RenameButton);
+            }
+            if (!Admin::user()->can('companies.edit')) {
+                $actions->disableEdit();
+            }
             $actions->disableDelete();
             $actions->disableView();
         });
+
+        $grid->exporter(new CompanyExport);
 
         return $grid;
     }
@@ -98,8 +114,8 @@ class CompanyController extends AdminController
                 'required' => '必须填写',
                 'unique' => '此公司已存在',
             ]);
-        $form->text('manager', '负责人');
         $form->text('business', '业务范围');
+        $form->text('manager', '负责人');
         $form->text('manager_phone', '负责人电话');
         $form->text('linkman', '日常联系人');
         $form->text('linkman_phone', '联系人电话');

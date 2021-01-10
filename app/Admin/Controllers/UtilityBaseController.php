@@ -3,15 +3,19 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\UtilityBase\ImportBase;
+use App\Admin\Traits\PermissionCheck;
 use App\Models\Room;
 use App\Models\UtilityBase;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
 class UtilityBaseController extends AdminController
 {
+    use PermissionCheck;
+    protected $permission = 'utilityBases';
     /**
      * Title for current resource.
      *
@@ -58,7 +62,9 @@ class UtilityBaseController extends AdminController
         });
 
         $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new ImportBase());
+            if (Admin::user()->can('utilityBases.import')) {
+                $tools->append(new ImportBase());
+            }
         });
         return $grid;
     }

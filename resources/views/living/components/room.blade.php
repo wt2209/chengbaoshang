@@ -42,6 +42,9 @@
                 @if ($record->has_lease)
                 <p>租期：{{$record->lease_start}}—{{$record->lease_end}}</p>
                 @endif
+                @if ($record->remark)
+                <p>备注：{{$record->remark}}</p>
+                @endif
             </div>
             <ul class="actions">
                 <li><a href="">详情</a></li>

@@ -4,6 +4,7 @@ namespace App\Admin\Actions\Company;
 
 use App\Models\Rename;
 use Encore\Admin\Actions\RowAction;
+use Encore\Admin\Auth\Permission;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,7 @@ class RenameButton extends RowAction
 
     public function handle(Model $model, Request $request)
     {
+        Permission::check('companies.rename');
         // $model ...
         DB::transaction(function () use ($model, $request) {
             $rename = new Rename();

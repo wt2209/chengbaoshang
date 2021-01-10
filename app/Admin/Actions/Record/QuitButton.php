@@ -3,6 +3,7 @@
 namespace App\Admin\Actions\Record;
 
 use Encore\Admin\Actions\RowAction;
+use Encore\Admin\Auth\Permission;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,8 @@ class QuitButton extends RowAction
 
     public function handle(Model $model, Request $request)
     {
+        Permission::check('records.quit');
+
         $model->is_living = false;
         $model->quitted_at = $request->quitted_at;
         $model->electric_end_base = $request->electric_end_base;

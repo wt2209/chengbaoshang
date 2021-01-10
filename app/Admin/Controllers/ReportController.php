@@ -8,14 +8,18 @@ use App\Admin\Actions\Report\DiscountButton;
 use App\Admin\Actions\Report\Generate;
 use App\Admin\Actions\Report\ImportDiscount;
 use App\Admin\Actions\Report\MonthReport;
+use App\Admin\Traits\PermissionCheck;
 use App\Models\Report;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Widgets\Table;
 
 class ReportController extends AdminController
 {
+    use PermissionCheck;
+    protected $permission = 'reports';
     /**
      * Title for current resource.
      *
@@ -91,10 +95,17 @@ class ReportController extends AdminController
         $grid->actions(function ($actions) {
             $row = $actions->row;
             if (!$row->discounted_at) { // 还没有减免
-                $actions->add(new DiscountButton);
+                if (Admin::user()->can('reports.discount')) {
+                    $actions->add(new DiscountButton);
+                }
                 $actions->disableEdit();
             } else if (!$row->charged_at) { // 还没有缴费，此时可以修改
-                $actions->add(new ChargeButton);
+                if (Admin::user()->can('reports.charge')) {
+                    $actions->add(new ChargeButton);
+                }
+                if (!Admin::user()->can('reports.edit')) {
+                    $actions->disableEdit();
+                }
             } else {
                 $actions->disableEdit();
             }
@@ -103,14 +114,22 @@ class ReportController extends AdminController
         });
         $grid->batchActions(function ($batch) {
             $batch->disableDelete();
-            $batch->add(new BatchCharge);
+            if (Admin::user()->can('reports.charge')) {
+                $batch->add(new BatchCharge);
+            }
         });
         $grid->tools(function (Grid\Tools $tools) {
-            $tools->append(new Generate());
-            $tools->append(new ImportDiscount());
+            if (Admin::user()->can('reports.generate')) {
+                $tools->append(new Generate());
+            }
+            if (Admin::user()->can('reports.discount.import')) {
+                $tools->append(new ImportDiscount());
+            }
             $tools->append(new MonthReport());
         });
+
         $grid->expandFilter();
+        
         $grid->filter(function ($filter) {
             $filter->disableIdFilter();
             $filter->column(1 / 2, function ($filter) {

@@ -3,6 +3,7 @@
 namespace App\Admin\Actions\Bill;
 
 use Encore\Admin\Actions\BatchAction;
+use Encore\Admin\Auth\Permission;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,8 @@ class BatchCharge extends BatchAction
 
     public function handle(Collection $collection, Request $request)
     {
+        Permission::check('bills.charge');
+
         $way = $request->charge_way;
         $charger = $request->charger;
         $chargedAt = $request->charged_at;
@@ -30,7 +33,10 @@ class BatchCharge extends BatchAction
     public function form()
     {
         $this->date('charged_at', '缴费日期')->default(now())->rules('required');
-        $this->text('charge_way', '缴费方式')->rules('required');
-        $this->text('charger', '缴费人')->rules('required');
+        $this->radio('charge_way', '缴费/扣款方式')->options([
+            '工程款扣款' => '工程款扣款&nbsp;&nbsp;&nbsp;',
+            '自行缴费' => '自行缴费&nbsp;&nbsp;&nbsp;',
+        ])->default('自行缴费');
+        $this->text('charger', '缴费人');
     }
 }

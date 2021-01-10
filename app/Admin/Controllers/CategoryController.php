@@ -6,11 +6,16 @@ use App\Admin\Actions\DisableButton;
 use App\Admin\Actions\EnableButton;
 use App\Models\Category;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
+use App\Admin\Traits\PermissionCheck;
 
 class CategoryController extends AdminController
 {
+    use PermissionCheck;
+    protected $permission = 'categories';
     /**
      * Title for current resource.
      *
@@ -43,12 +48,21 @@ class CategoryController extends AdminController
 
         $grid->disableRowSelector();
 
+        if (!Admin::user()->can('categories.create')) {
+            $grid->disableCreateButton();
+        }
+
         $grid->actions(function ($actions) {
             $row = $actions->row;
-            if ($row->is_using) {
+            $user = Admin::user();
+            if ($row->is_using && $user->can('categories.disable')) {
                 $actions->add(new DisableButton);
-            } else {
+            }
+            if (!$row->is_using && $user->can('categories.enable')) {
                 $actions->add(new EnableButton);
+            }
+            if (!$user->can('categories.edit')) {
+                $actions->disableEdit();
             }
             $actions->disableDelete();
             $actions->disableView();
@@ -57,11 +71,6 @@ class CategoryController extends AdminController
         return $grid;
     }
 
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
     protected function form()
     {
         $states = [
