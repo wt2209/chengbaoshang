@@ -17,6 +17,8 @@ class CreateDepositsTable extends Migration
         Schema::create('deposits', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('record_id');
+            $table->unsignedBigInteger('company_id'); // 所属公司
+            $table->unsignedBigInteger('room_id'); // 所属房间
             $table->decimal('money');
             $table->string('company_name')->comment('生成时公司的名字');
             $table->date('charged_at')->nullable()->comment('交费时间/财务扣款时间');

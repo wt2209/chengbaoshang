@@ -17,6 +17,8 @@ class CreateReportsTable extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('record_id');
+            $table->unsignedBigInteger('company_id'); // 所属公司
+            $table->unsignedBigInteger('room_id'); // 所属房间
             $table->string('company_name')->comment('当前的公司名称');
             $table->date('start_date')->comment('开始时间');
             $table->date('end_date')->comment('结束时间');

@@ -17,6 +17,8 @@ class CreateRentsTable extends Migration
         Schema::create('rents', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('record_id')->comment('属于的入住记录');
+            $table->unsignedBigInteger('company_id'); // 所属公司
+            $table->unsignedBigInteger('room_id'); // 所属房间
             $table->string('company_name')->comment('生成租金时的公司名字');
             $table->decimal('money', 10, 2)->comment('租金数额');
             $table->unsignedSmallInteger('year')->comment('年度');

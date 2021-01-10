@@ -9,7 +9,6 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
-use Encore\Admin\Layout\Content;
 use App\Admin\Traits\PermissionCheck;
 
 class CategoryController extends AdminController

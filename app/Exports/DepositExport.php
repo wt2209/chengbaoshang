@@ -31,8 +31,8 @@ class DepositExport extends ExcelExporter implements WithMapping
     public function map($deposit): array
     {
         return [
-            $deposit->record->company->company_name,
-            $deposit->record->room->title,
+            $deposit->company->company_name,
+            $deposit->room->title,
             $deposit->record->is_living ? '在住' : '已退房',
             $deposit->company_name,
             $deposit->money,

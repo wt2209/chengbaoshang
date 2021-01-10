@@ -32,8 +32,8 @@ class RentExport extends ExcelExporter implements WithMapping
     {
         return [
             $rent->is_refund,
-            $rent->record->company->company_name,
-            $rent->record->room->title,
+            $rent->company->company_name,
+            $rent->room->title,
             $rent->company_name,
             $rent->money,
             $rent->year,

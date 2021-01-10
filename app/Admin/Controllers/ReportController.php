@@ -35,12 +35,12 @@ class ReportController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Report());
-        $grid->model()->with(['record.company', 'record.room']);
+        $grid->model()->with(['company', 'room']);
 
-        $grid->column('record_company_name', '公司当前名称')->display(function () {
+        $grid->column('company.company_name', '公司当前名称')->display(function () {
             return $this->record->company->company_name;
         });
-        $grid->column('record_room_title', '房间号')->display(function () {
+        $grid->column('room.title', '房间号')->display(function () {
             return $this->record->room->title;
         });
         $grid->column('company_name', '报表时公司名称');
@@ -129,7 +129,7 @@ class ReportController extends AdminController
         });
 
         $grid->expandFilter();
-        
+
         $grid->filter(function ($filter) {
             $filter->disableIdFilter();
             $filter->column(1 / 2, function ($filter) {

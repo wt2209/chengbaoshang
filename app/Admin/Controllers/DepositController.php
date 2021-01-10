@@ -33,14 +33,10 @@ class DepositController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Deposit());
-        $grid->model()->with(['record.company', 'record.room']);
+        $grid->model()->with(['record', 'company', 'room']);
 
-        $grid->column('record_company_name', '公司当前名称')->display(function () {
-            return $this->record->company->company_name;
-        })->totalRow('合计');
-        $grid->column('record_room_title', '房间号')->display(function () {
-            return $this->record->room->title;
-        });
+        $grid->column('company.company_name', '公司当前名称')->totalRow('合计');
+        $grid->column('room.title', '房间号');
         $grid->column('record.is_living', '在住')->display(function ($isLiving) {
             return $isLiving
                 ? '<span class="label label-success">在住</span>'

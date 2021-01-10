@@ -20,6 +20,8 @@ class RecordObserver
         if ($record->has_lease) {
             $rent = new Rent();
             $rent->record_id = $record->id;
+            $rent->company_id = $record->company_id;
+            $rent->room_id = $record->room_id;
             $rent->company_name = $record->company->company_name;
             // 日期有验证，金额不会出现负数
             $rent->money = $this->getRentMoney($record->lease_start, $record->lease_end, $record->rent);
@@ -42,13 +44,15 @@ class RecordObserver
 
                 $rent = new Rent;
                 $rent->record_id = $record->id;
+                $rent->company_id = $record->company_id;
+                $rent->room_id = $record->room_id;
                 $rent->company_name = $record->company->company_name;
                 $rent->year = date('Y', strtotime($record->quitted_at));
                 $rent->month = date('m', strtotime($record->quitted_at));
-              
+
                 if ($money < 0) { // 已超期居住
                     // +1 天
-                    $rent->start_date = date('Y-m-d',strtotime('+1 day', strtotime($record->lease_end)));
+                    $rent->start_date = date('Y-m-d', strtotime('+1 day', strtotime($record->lease_end)));
                     $rent->end_date = $record->quitted_at;
                     $rent->money = $money * -1;
                 } else { // 需要退费

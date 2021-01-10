@@ -94,7 +94,7 @@ class CompanyController extends AdminController
         $categoryIdsWithLease = Category::where('has_lease', true)->pluck('id')->toArray();
         $form->select('category_id', '所属类型')
             ->options(Category::pluck('title', 'id'))
-            ->when($categoryIdsWithLease, function (Form $form) {
+            ->when('in', $categoryIdsWithLease, function (Form $form) {
                 $form->date('lease_start', '租期开始日')
                     ->default(null)
                     ->rules('required', ['required' => '必须填写']);

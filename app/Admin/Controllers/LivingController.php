@@ -46,7 +46,7 @@ class LivingController extends Controller
     public function create(Content $content)
     {
         Permission::check('livings.create');
-        
+
         $companies = Company::orderBy('company_name', 'asc')->get();
         $categories = Category::get();
         $emptyRooms = Room::where('is_using', true)
@@ -83,6 +83,8 @@ class LivingController extends Controller
                 // 创建押金记录
                 $deposit = new Deposit();
                 $deposit->record_id = $record->id;
+                $deposit->company_id = $record->company_id;
+                $deposit->room_id = $record->room_id;
                 $deposit->company_name = $record->company_name;
                 $deposit->money = $room['deposit'];
                 $deposit->save();
@@ -95,7 +97,7 @@ class LivingController extends Controller
     public function quit(Content $content)
     {
         Permission::check('livings.quit');
-        
+
         $companies = Company::get();
         $content->title('退房');
         $content->view('living/quit', compact('companies'));
@@ -104,7 +106,7 @@ class LivingController extends Controller
 
     public function delete(LivingQuitRequest $request)
     {
-        DB::transaction(function () use($request) {
+        DB::transaction(function () use ($request) {
             $company = Company::find($request->company_id);
             foreach ($request->records as $record) {
                 $model = Record::find($record['id']);

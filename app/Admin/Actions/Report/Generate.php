@@ -67,6 +67,8 @@ class Generate extends Action
 
             $report = [
                 'record_id' => $record->id,
+                'company_id' => $record->company_id,
+                'room_id' => $record->room_id,
                 'company_name' => $record->company->company_name,
                 'start_date' => date('Y-m-d', $recordStart),
                 'end_date' => date('Y-m-d', $recordEnd),
@@ -102,7 +104,6 @@ class Generate extends Action
             $insertData[] = $report;
         }
 
-        // 插入剩余的
         if (count($insertData) > 0) {
             DB::table('reports')->insert($insertData);
         }
