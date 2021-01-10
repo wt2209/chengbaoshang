@@ -179,10 +179,10 @@
 
         // 筛选
         $('#filter-input').on('input', function() {
-            const text = $(this).val()
+            const text = $(this).val().toLowerCase()
             if ($(this).val()) {
                 $('.empty-room-title').each(function(index, element) {
-                    if ($(element).html().indexOf(text) === -1) {
+                    if ($(element).html().toLowerCase().indexOf(text) === -1) {
                         $(element).parents('li').hide()
                     } else {
                         $(element).parents('li').show()
