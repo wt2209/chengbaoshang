@@ -17,20 +17,20 @@
 }
 
 .room .header {
-    min-height: 69px;
+    min-height: 59px;
     border-bottom: 1px solid #ddd;
 }
 
 .room .header .room-title {
     display: flex;
     line-height: 1.6em;
-    margin: 6px 10px;
+    margin: 3px 5px;
     font-size: 16px;
     font-weight: bold;
 }
 
 .room .header .room-title a {
-    flex: 3;
+    flex: 7;
     color: #333;
 }
 
@@ -41,13 +41,13 @@
 }
 
 .room .header .room-remark {
-    margin-left: 10px;
+    margin: 3px;
     font-size: 12px;
     line-height: 1.1em;
 }
 
 .room .body .room-content {
-    padding: 10px;
+    padding: 3px;
     background-color: #5DADE2;
     min-height: 160px;
 }

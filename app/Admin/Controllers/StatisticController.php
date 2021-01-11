@@ -2,7 +2,6 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Deposit;
 use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -57,7 +56,7 @@ class StatisticController extends Controller
             ->join('companies', 'companies.id', '=', 'bills.company_id')
             ->select(
                 DB::raw('sum(`money`) as money'),
-                DB::raw('companies.company_name as current_company_name'),
+                DB::raw('companies.company_name as current_company_name')
             )
             ->groupBy('current_company_name')
             ->get();
